@@ -312,6 +312,15 @@
     font-size:13px;
   }
   .site-footer a:hover{color:var(--text);}
+
+  @media (max-width:600px){
+    .wrap{padding-left:14px;padding-right:14px;}
+    .form-grid{grid-template-columns:1fr;gap:12px;}
+    .form-grid .full{grid-column:auto;}
+    .form-grid > div{width:100%;min-width:0;}
+    input, select{width:100%;min-width:0;max-width:100%;display:block;height:42px;}
+    input[type="date"]{-webkit-appearance:none;appearance:none;min-height:42px;}
+  }
 </style>
 </head>
 <body>
@@ -345,7 +354,7 @@
 <div class="wrap">
 
   <header>
-    <h1>مبادرة عزم</h1>
+    <h1>مبادرة عزم | كلية الهندسة</h1>
   </header>
 
   <div class="view active" id="view-add">
