@@ -724,7 +724,6 @@
               </div>
               <div>
                 <h3>بيانات الموعد</h3>
-                <p>كل البيانات تحفظ على جهازك محليًا.</p>
               </div>
             </div>
 
@@ -1277,6 +1276,8 @@
     const src = document.body.classList.contains('dark') ? DARK_LOGO_SRC : LOGO_SRC;
     document.getElementById('bannerLogo').src = src;
     document.getElementById('drawerLogo').src = src;
+    const topBrandLogo = document.getElementById('topBrandLogo');
+    if (topBrandLogo) topBrandLogo.src = src;
   }
 
   loadData();
@@ -1293,15 +1294,9 @@
 const brandHome = document.getElementById('brandHome');
 brandHome.addEventListener('click', function(){
   showView('add');
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('backdrop').classList.remove('show');
-  document.body.classList.remove('drawer-open');
-  window.scrollTo({top:0,behavior:'smooth'});
+
 });
 
-const topBrandLogo = document.getElementById('topBrandLogo');
-const bannerLogo = document.getElementById('bannerLogo');
-if (bannerLogo && bannerLogo.src) topBrandLogo.src = bannerLogo.src;
 </script>
 </body>
 </html>
