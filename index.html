@@ -989,11 +989,20 @@
 
     errorEl.style.display = 'none';
 
+    const examTypesForUpcoming = [
+      'الاختبار الفصلي الاول',
+      'الاختبار الفصلي الثاني',
+      'النهائي',
+      'كويز (اختبار قصير)'
+    ];
+    const destination = examTypesForUpcoming.indexOf(selectedType) !== -1 ? 'upcoming' : 'personal';
+
     exams.push({
       id:'p-' + Date.now().toString(36) + Math.random().toString(36).slice(2,7),
       subject:subject,
       examName:examName,
       isCustom:selectedType === 'آخر',
+      destination:destination,
       date:date
     });
 
@@ -1003,13 +1012,7 @@
     dateEl.value = '';
     toggleCustomType();
 
-    const examTypesForUpcoming = [
-      'الاختبار الفصلي الاول',
-      'الاختبار الفصلي الثاني',
-      'النهائي',
-      'كويز (اختبار قصير)'
-    ];
-    successEl.textContent = examTypesForUpcoming.indexOf(selectedType) !== -1
+    successEl.textContent = destination === 'upcoming'
       ? 'تمت إضافة الموعد إلى «اختباراتي القادمة».'
       : 'تمت إضافة الموعد إلى «مواعيدي القادمة».';
     successEl.style.display = 'block';
@@ -1039,20 +1042,42 @@
     if(currentView === 'upcoming') renderUpcoming();
   }
 
+  function isUpcomingExamType(name){
+    return [
+      'الاختبار الفصلي الاول',
+      'الاختبار الفصلي الثاني',
+      'النهائي',
+      'كويز (اختبار قصير)'
+    ].indexOf((name || '').trim()) !== -1;
+  }
+
   function buildStarredUpcoming(){
-    return LEVEL3.concat(LEVEL4)
+    const saved = LEVEL3.concat(LEVEL4)
       .filter(function(item){
         return starred.indexOf(item.id) !== -1 && (!item.date || dayDiff(item.date) >= 0);
       })
       .map(function(item){
         return {type:'starred',id:item.id,subject:item.subject,examName:item.examName,date:item.date};
+      });
+
+    const addedExams = exams
+      .filter(function(ex){
+        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
+        return destination === 'upcoming' && ex.date && dayDiff(ex.date) >= 0;
       })
-      .sort(sortByDate);
+      .map(function(ex){
+        return {type:'added-exam',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:false};
+      });
+
+    return saved.concat(addedExams).sort(sortByDate);
   }
 
   function buildPersonalUpcoming(){
     return exams
-      .filter(function(ex){ return ex.date && dayDiff(ex.date) >= 0; })
+      .filter(function(ex){
+        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
+        return destination === 'personal' && ex.date && dayDiff(ex.date) >= 0;
+      })
       .map(function(ex){
         return {type:'personal',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:!!ex.isCustom};
       })
@@ -1068,11 +1093,12 @@
 
   function cardMarkup(ex, showStar){
     const hasNote = !!(notes[ex.id] && notes[ex.id].trim());
-    const action = ex.type === 'personal'
+    const isAddedExam = ex.type === 'personal' || ex.type === 'added-exam';
+    const action = isAddedExam
       ? '<button class="icon-btn" data-action="del" data-id="' + ex.id + '" aria-label="حذف" title="حذف">×</button>'
       : '<button class="icon-btn" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">×</button>';
 
-    const star = showStar
+    const star = showStar && ex.type === 'starred'
       ? '<button class="star-btn on" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">★</button>'
       : '';
 
