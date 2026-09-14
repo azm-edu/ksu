@@ -1003,7 +1003,15 @@
     dateEl.value = '';
     toggleCustomType();
 
-    successEl.textContent = 'تمت إضافة الموعد إلى «مواعيدي القادمة».';
+    const examTypesForUpcoming = [
+      'الاختبار الفصلي الاول',
+      'الاختبار الفصلي الثاني',
+      'النهائي',
+      'كويز (اختبار قصير)'
+    ];
+    successEl.textContent = examTypesForUpcoming.indexOf(selectedType) !== -1
+      ? 'تمت إضافة الموعد إلى «اختباراتي القادمة».'
+      : 'تمت إضافة الموعد إلى «مواعيدي القادمة».';
     successEl.style.display = 'block';
     clearTimeout(successTimeout);
     successTimeout = setTimeout(function(){ successEl.style.display = 'none'; }, 4500);
