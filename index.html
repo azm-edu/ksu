@@ -667,11 +667,12 @@
     #view-upcoming .badge{font-size:11px;padding:6px 8px;gap:5px}
     #view-upcoming .badge .status-icon{width:16px;height:16px}
     #view-upcoming .countdown{font-size:15px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
-    #view-upcoming .card-actions{width:100%;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:nowrap;justify-content:flex-start}
-    #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 0;min-width:0}
+    #view-upcoming .card-actions{width:calc(100% + 126px);margin-left:-126px;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 38px;align-items:stretch;gap:6px;direction:rtl}
+    #view-upcoming .calendar-btn,#view-upcoming .note-btn{width:100%;min-width:0}
     #view-upcoming .calendar-btn svg{width:13px;height:13px}
-    #view-upcoming .icon-btn{flex:0 0 38px}
-    #view-upcoming .card-actions > button{height:35px;min-height:35px;padding:0 7px}
+    #view-upcoming .icon-btn{width:38px;min-width:38px}
+    #view-upcoming .card-actions > button{height:35px;min-height:35px;padding:0 7px;box-sizing:border-box}
+    #view-upcoming .calendar-btn span,#view-upcoming .note-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   }
 </style>
 </head>
