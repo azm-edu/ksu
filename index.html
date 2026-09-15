@@ -664,13 +664,13 @@
     /* بطاقات "اختباراتي" و"مواعيدي" للجوال: نفس التنسيق */
     #view-upcoming .card{padding:12px;margin-bottom:8px}
     #view-upcoming .card-main{display:block;position:relative;padding-left:0}
-    #view-upcoming .card-info{width:100%;min-width:0}
+    #view-upcoming .card-info{width:100%;min-width:0;padding-left:118px}
+    #view-upcoming .status-with-countdown{position:absolute;left:0;top:0;margin-top:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:3px;min-width:108px}
     #view-upcoming .subject{font-size:14px;line-height:1.45}
     #view-upcoming .examname{font-size:11.5px;line-height:1.45;margin-top:3px}
     #view-upcoming .date{font-size:10.5px;margin-top:3px}
-    #view-upcoming .status-with-countdown{margin-top:8px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;min-width:0}
     #view-upcoming .badge{font-size:9.5px;padding:5px 7px;gap:4px}
-    #view-upcoming .countdown{font-size:9.5px;line-height:1.4}
+    #view-upcoming .countdown{font-size:11.5px;line-height:1.45;font-weight:800}
     #view-upcoming .card-actions{width:100%;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;justify-content:flex-start}
     #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 110px}
     #view-upcoming .icon-btn{flex:0 0 38px}
@@ -1124,8 +1124,20 @@
       'END:VCALENDAR'
     ].join('\r\n') + '\r\n';
 
-    const file = new File([new Uint8Array([0xEF,0xBB,0xBF]), ics], 'azm-' + id + '.ics', {type:'text/calendar;charset=utf-8'});
+    /* Android: افتح صفحة إنشاء حدث في Google Calendar، وهي تضيفه مباشرة بعد الضغط على حفظ. */
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    if(isAndroid){
+      const googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent(title) +
+        '&dates=' + encodeURIComponent(y + m + d + '/' + endY + endM + endD) +
+        '&details=' + encodeURIComponent(description);
+      window.location.href = googleUrl;
+      return;
+    }
 
+    const file = new File([ics], 'azm-' + id + '.ics', {type:'text/calendar'});
+
+    /* iPhone/iPad: شارك ملف التقويم مع تطبيق التقويم من ورقة المشاركة. */
     try{
       if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
         await navigator.share({title:title, text:'إضافة الموعد إلى التقويم', files:[file]});
@@ -1135,7 +1147,8 @@
       if(e && e.name === 'AbortError') return;
     }
 
-    const blob = new Blob([new Uint8Array([0xEF,0xBB,0xBF]), ics], {type:'text/calendar;charset=utf-8'});
+    /* fallback للأجهزة/المتصفحات الأخرى */
+    const blob = new Blob([ics], {type:'text/calendar'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
