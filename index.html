@@ -402,7 +402,7 @@
   body.dark .st-today{color:#e3bd39}
   body.dark .st-done{color:#9aa1ad}
   .st-unknown{background:var(--surface-2);color:var(--text-dim)}
-  .countdown{font-size:10px;color:var(--text-faint)}
+  .countdown{font-size:15px;color:var(--text);font-weight:800;line-height:1.35}
 
   .card-actions{
     display:flex;align-items:center;gap:7px;
@@ -646,7 +646,7 @@
     .date{font-size:11px;margin-top:4px}
     .status{margin-top:9px;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:7px;flex-wrap:wrap}
     .badge{font-size:10px;padding:5px 8px;gap:5px}
-    .countdown{font-size:10px}
+    .countdown{font-size:11px}
     .card-actions{width:100%;margin-top:10px;padding-top:9px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;justify-content:flex-start}
     .card-actions > button{min-width:0;min-height:36px;height:36px;padding:0 8px}
     .calendar-btn,.note-btn{flex:1 1 120px;white-space:nowrap}
@@ -666,9 +666,10 @@
     #view-upcoming .date{font-size:10.5px;margin-top:3px}
     #view-upcoming .badge{font-size:11px;padding:6px 8px;gap:5px}
     #view-upcoming .badge .status-icon{width:16px;height:16px}
-    #view-upcoming .countdown{font-size:14px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
-    #view-upcoming .card-actions{width:100%;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;justify-content:flex-start}
-    #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 110px}
+    #view-upcoming .countdown{font-size:15px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
+    #view-upcoming .card-actions{width:100%;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:nowrap;justify-content:flex-start}
+    #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 0;min-width:0}
+    #view-upcoming .calendar-btn svg{width:13px;height:13px}
     #view-upcoming .icon-btn{flex:0 0 38px}
     #view-upcoming .card-actions > button{height:35px;min-height:35px;padding:0 7px}
   }
