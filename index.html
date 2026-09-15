@@ -375,6 +375,7 @@
   }
   .card:hover{border-color:var(--border-strong);box-shadow:var(--shadow-soft)}
   .card-main{
+    position:relative;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -637,7 +638,8 @@
     .full,.custom-wrap.show{grid-column:auto}
     .panel{padding:15px}
     .card{padding:13px 12px;margin-bottom:8px}
-    .card-main{display:block}
+    .card-main{display:block;position:relative;padding-left:48px}
+    .card-main > .star-btn{position:absolute;left:0;top:0}
     .card-info{width:100%;min-width:0}
     .subject{font-size:14px;line-height:1.5;overflow-wrap:anywhere}
     .examname{font-size:12px;line-height:1.5;margin-top:3px;overflow-wrap:anywhere}
