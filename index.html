@@ -462,6 +462,54 @@
     line-height:1.8;
   }
 
+  /* بطاقة المواد الموحّدة (مواعيدي / اختباراتي / المواعيد القادمة قريباً) */
+  .card-v2{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:18px 18px 16px;
+    margin-bottom:12px;
+    box-shadow:0 5px 18px rgba(24,43,73,.035);
+    transition:.2s ease;
+  }
+  .card-v2:hover{border-color:var(--border-strong);box-shadow:var(--shadow-soft)}
+  .cv2-head{position:relative;padding-left:34px}
+  .cv2-head .star-btn{position:absolute;left:0;top:0}
+  .cv2-title{font-size:16px;font-weight:900;line-height:1.5;color:var(--text);overflow-wrap:anywhere}
+  .cv2-examname{font-size:13px;font-weight:700;color:var(--text-dim);margin-top:6px;overflow-wrap:anywhere}
+  .cv2-date{
+    display:flex;align-items:center;justify-content:flex-end;gap:6px;
+    margin-top:9px;font-size:12.5px;color:var(--text-faint);
+  }
+  .cv2-date svg{width:14px;height:14px;flex:none}
+  .cv2-divider{height:1px;background:var(--border);margin:14px 0}
+  .cv2-status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .cv2-status-row .badge{padding:8px 13px;font-size:12.5px;border:1px solid color-mix(in srgb,currentColor 25%,transparent)}
+  .cv2-countdown{font-size:16px;font-weight:900;color:var(--text);white-space:nowrap}
+  .cv2-actions{display:grid;gap:8px;direction:rtl}
+  .cv2-actions.has-cal{grid-template-columns:1fr 1fr 40px}
+  .cv2-actions.no-cal{grid-template-columns:1fr 40px}
+  .cv2-btn{
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    color:var(--text-dim);
+    border-radius:12px;
+    height:42px;
+    padding:0 8px;
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    font-size:12.5px;font-weight:800;
+    transition:.2s ease;
+    min-width:0;
+  }
+  .cv2-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cv2-btn svg{width:15px;height:15px;flex:none}
+  .cv2-btn:hover,.cv2-btn.open{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border))}
+  .cv2-close{font-size:17px;font-weight:700}
+  .cv2-close:hover{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 50%,var(--border))}
+  .cv2-star{color:var(--text-dim);font-size:17px}
+  .cv2-star.on{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border));background:var(--gold-soft)}
+  .card-v2 .note-box{margin-top:14px;padding-top:14px}
+
   .socials{
     display:flex;
     gap:8px;
@@ -658,39 +706,15 @@
     .save-note{width:100%}
     .section-header{align-items:flex-start}
 
-    /* بطاقات "اختباراتي" و"مواعيدي" للجوال: الحالة والعداد أعلى اليسار */
-    #view-upcoming .card{padding:12px;margin-bottom:8px}
-    #view-upcoming .card-main{display:block;position:relative;padding-left:126px;min-height:72px}
-    #view-upcoming .card-info{width:100%;min-width:0;padding-left:0}
-    #view-upcoming .status-with-countdown{position:absolute;left:0;top:0;margin-top:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;min-width:114px}
-    #view-upcoming .subject{font-size:14px;line-height:1.45}
-    #view-upcoming .examname{font-size:11.5px;line-height:1.45;margin-top:3px}
-    #view-upcoming .date{font-size:10.5px;margin-top:3px}
-    #view-upcoming .badge{font-size:11px;padding:6px 8px;gap:5px}
-    #view-upcoming .badge .status-icon{width:16px;height:16px}
-    #view-upcoming .countdown{font-size:15px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
-    #view-upcoming .card-actions,
-    .home-near-section .card-actions{width:calc(100% + 126px);margin-left:-126px;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 38px;align-items:stretch;gap:6px;direction:rtl}
-    #view-upcoming .calendar-btn,#view-upcoming .note-btn,
-    .home-near-section .calendar-btn,.home-near-section .note-btn{width:100%;min-width:0}
-    #view-upcoming .calendar-btn svg,
-    .home-near-section .calendar-btn svg{width:13px;height:13px}
-    #view-upcoming .icon-btn,
-    .home-near-section .icon-btn{width:38px;min-width:38px}
-    #view-upcoming .card-actions > button,
-    .home-near-section .card-actions > button{height:35px;min-height:35px;padding:0 7px;box-sizing:border-box}
-    #view-upcoming .calendar-btn span,#view-upcoming .note-btn span,
-    .home-near-section .calendar-btn span,.home-near-section .note-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .home-near-section .card{padding:12px;margin-bottom:8px}
-    .home-near-section .card-main{display:block;position:relative;padding-left:126px;min-height:72px}
-    .home-near-section .card-info{width:100%;min-width:0;padding-left:0}
-    .home-near-section .status-with-countdown{position:absolute;left:0;top:0;margin-top:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;min-width:114px}
-    .home-near-section .subject{font-size:14px;line-height:1.45}
-    .home-near-section .examname{font-size:11.5px;line-height:1.45;margin-top:3px}
-    .home-near-section .date{font-size:10.5px;margin-top:3px}
-    .home-near-section .badge{font-size:11px;padding:6px 8px;gap:5px}
-    .home-near-section .badge .status-icon{width:16px;height:16px}
-    .home-near-section .countdown{font-size:15px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
+    /* بطاقات "اختباراتي" و"مواعيدي" و"المواعيد القادمة قريباً" للجوال */
+    .card-v2{padding:15px 14px 13px;margin-bottom:10px}
+    .cv2-title{font-size:14.5px}
+    .cv2-examname{font-size:12px;margin-top:5px}
+    .cv2-date{font-size:11.5px;margin-top:7px}
+    .cv2-divider{margin:12px 0}
+    .cv2-status-row .badge{font-size:11.5px;padding:7px 11px}
+    .cv2-countdown{font-size:14.5px}
+    .cv2-btn{height:38px;font-size:11.5px}
   }
 </style>
 </head>
@@ -1202,35 +1226,42 @@
   }
 
   function cardMarkup(ex, showStar){
-    const hasNote = !!(notes[ex.id] && notes[ex.id].trim());
     const isAddedExam = ex.type === 'personal' || ex.type === 'added-exam';
     const action = isAddedExam
-      ? '<button class="icon-btn" data-action="del" data-id="' + ex.id + '" aria-label="حذف" title="حذف">×</button>'
-      : '<button class="icon-btn" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">×</button>';
+      ? '<button class="cv2-btn cv2-close" data-action="del" data-id="' + ex.id + '" aria-label="حذف" title="حذف">×</button>'
+      : '<button class="cv2-btn cv2-close" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">×</button>';
 
     const star = showStar && ex.type === 'starred'
-      ? '<button class="star-btn on" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">★</button>'
+      ? '<button class="cv2-btn cv2-star on" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">★</button>'
       : '';
 
-    const examLine = ex.examName ? '<div class="examname ' + (ex.type === 'personal' ? 'personal-examname' : '') + '">' + escapeHtml(ex.examName) + (ex.isCustom ? ' <span style="color:var(--gold)">· مخصص</span>' : '') + '</div>' : '';
-    const dateLine = ex.date ? '<div class="date">' + formatDateArabic(ex.date) + '</div>' : '<div class="date">التاريخ لم يُحدد</div>';
+    // نوع الاختبار/الموعد يُعرض مباشرة بدون بادئة "الاسم :"
+    const examLine = ex.examName ? '<div class="cv2-examname">' + escapeHtml(ex.examName) + (ex.isCustom ? ' <span style="color:var(--gold)">· مخصص</span>' : '') + '</div>' : '';
+    const dateLine = ex.date
+      ? '<div class="cv2-date"><span>' + formatDateArabic(ex.date) + '</span><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg></div>'
+      : '<div class="cv2-date"><span>التاريخ لم يُحدد</span></div>';
 
-    return '<article class="card" data-card-id="' + escapeHtml(ex.id) + '">' +
-      '<div class="card-main">' +
-        '<div class="card-info">' +
-          '<div class="subject">' + escapeHtml(ex.subject) + '</div>' +
-          examLine +
-          dateLine +
-        '</div>' +
-        statusBlock(ex, ex.type === 'personal' ? 'personal' : 'exam') +
-        '<div class="card-actions">' +
-          (ex.date ? '<button class="calendar-btn" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
-          '<button class="note-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' +
-            ICONS.note + '<span>الملاحظات</span>' +
-          '</button>' +
-          star +
-          action +
-        '</div>' +
+    const hasCal = !!ex.date;
+    const actionsClass = hasCal ? 'cv2-actions has-cal' : 'cv2-actions no-cal';
+
+    return '<article class="card-v2" data-card-id="' + escapeHtml(ex.id) + '">' +
+      '<div class="cv2-head">' +
+        '<div class="cv2-title">' + escapeHtml(ex.subject) + '</div>' +
+        examLine +
+        dateLine +
+      '</div>' +
+      '<div class="cv2-divider"></div>' +
+      '<div class="cv2-status-row">' +
+        statusBlockV2(ex, ex.type === 'personal' ? 'personal' : 'exam') +
+      '</div>' +
+      '<div class="cv2-divider"></div>' +
+      '<div class="' + actionsClass + '">' +
+        (hasCal ? '<button class="cv2-btn" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
+        '<button class="cv2-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' +
+          ICONS.note + '<span>الملاحظات</span>' +
+        '</button>' +
+        star +
+        action +
       '</div>' +
       '<div class="note-box" id="note-' + escapeHtml(ex.id) + '">' +
         '<div class="note-row">' +
@@ -1240,6 +1271,15 @@
         '<div class="saved-hint">الملاحظة تحفظ على جهازك ولا تُرسل لأي جهة.</div>' +
       '</div>' +
     '</article>';
+  }
+
+  function statusBlockV2(ex, kind){
+    if(!ex.date){
+      return '<span class="badge st-unknown">' + STATUS_ICONS.unknown + 'التاريخ لم يُحدد</span>';
+    }
+    const st = statusFor(ex.date, kind);
+    return (st.countdown ? '<span class="cv2-countdown">' + st.countdown + '</span>' : '<span></span>') +
+      '<span class="badge ' + st.cls + '">' + st.icon + st.label + '</span>';
   }
 
   function sectionMarkup(title, list, emptyText, showStar, unit){
