@@ -655,6 +655,21 @@
     .note-row{flex-direction:column;align-items:stretch}
     .save-note{width:100%}
     .section-header{align-items:flex-start}
+
+    /* ضبط بطاقات "اختباراتي" و"مواعيدي" للجوال فقط */
+    #view-upcoming .card{padding:12px;margin-bottom:8px}
+    #view-upcoming .card-main{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:8px;padding-left:0}
+    #view-upcoming .card-info{min-width:0;width:100%}
+    #view-upcoming .subject{font-size:14px;line-height:1.45}
+    #view-upcoming .examname{font-size:11.5px;line-height:1.45;margin-top:3px}
+    #view-upcoming .date{font-size:10.5px;margin-top:3px}
+    #view-upcoming .status{margin:0;align-items:flex-end;gap:3px;min-width:max-content}
+    #view-upcoming .badge{font-size:9.5px;padding:5px 7px;gap:4px}
+    #view-upcoming .countdown{font-size:9.5px}
+    #view-upcoming .card-actions{grid-column:1 / -1;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;justify-content:flex-start}
+    #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 110px}
+    #view-upcoming .icon-btn,#view-upcoming .star-btn{flex:0 0 38px}
+    #view-upcoming .card-actions > button{height:35px;min-height:35px;padding:0 7px}
   }
 </style>
 </head>
