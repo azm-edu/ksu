@@ -663,14 +663,15 @@
 
     /* بطاقات "اختباراتي" و"مواعيدي" للجوال: نفس التنسيق */
     #view-upcoming .card{padding:12px;margin-bottom:8px}
-    #view-upcoming .card-main{display:block;position:relative;padding-left:0}
-    #view-upcoming .card-info{width:100%;min-width:0;padding-left:118px}
-    #view-upcoming .status-with-countdown{position:absolute;left:0;top:0;margin-top:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:3px;min-width:108px}
+    #view-upcoming .card-main{display:block;position:relative;padding-left:126px;min-height:72px}
+    #view-upcoming .card-info{width:100%;min-width:0;padding-left:0}
+    #view-upcoming .status-with-countdown{position:absolute;left:0;top:0;margin-top:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;min-width:114px}
     #view-upcoming .subject{font-size:14px;line-height:1.45}
     #view-upcoming .examname{font-size:11.5px;line-height:1.45;margin-top:3px}
     #view-upcoming .date{font-size:10.5px;margin-top:3px}
-    #view-upcoming .badge{font-size:9.5px;padding:5px 7px;gap:4px}
-    #view-upcoming .countdown{font-size:11.5px;line-height:1.45;font-weight:800}
+    #view-upcoming .badge{font-size:11px;padding:6px 8px;gap:5px}
+    #view-upcoming .badge .status-icon{width:16px;height:16px}
+    #view-upcoming .countdown{font-size:14px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
     #view-upcoming .card-actions{width:100%;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;justify-content:flex-start}
     #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 110px}
     #view-upcoming .icon-btn{flex:0 0 38px}
@@ -764,7 +765,7 @@
             <div class="form-grid">
               <div class="full">
                 <label for="subjectInput">اسم المادة</label>
-                <input type="text" id="subjectInput" placeholder="مثال: مهارات الاتصال" autocomplete="off">
+                <input type="text" id="subjectInput" placeholder="مثال: 106 ريض" autocomplete="off">
               </div>
 
               <div>
@@ -821,7 +822,7 @@
           <div class="page-heading">
             <div>
               <h2>مواد المستوى الثالث</h2>
-              <p>اضغط النجمة لحفظ المادة في اختباراتي القادمة.</p>
+              <p>اضغط النجمة لحفظ المادة في المواعيد القادمة</p>
             </div>
           </div>
           <div id="level3Container"></div>
@@ -831,7 +832,7 @@
           <div class="page-heading">
             <div>
               <h2>مواد المستوى الرابع</h2>
-              <p>اضغط النجمة لحفظ المادة في اختباراتي القادمة.</p>
+              <p>اضغط النجمة لحفظ المادة في المواعيد القادمة</p>
             </div>
           </div>
           <div id="level4Container"></div>
@@ -1066,7 +1067,7 @@
     renderUpcoming();
   }
 
-  async function downloadCalendarEvent(id){
+  function downloadCalendarEvent(id){
     let ex = exams.find(function(item){ return item.id === id; });
     if(ex){
       ex = {id:ex.id, subject:ex.subject, examName:ex.examName, date:ex.date};
@@ -1087,128 +1088,21 @@
     const endM = String(next.getMonth() + 1).padStart(2, '0');
     const endD = String(next.getDate()).padStart(2, '0');
 
-    function escapeICS(value){
-      return String(value || '')
-        .replace(/\\/g, '\\\\')
-        .replace(/;/g, '\\;')
-        .replace(/,/g, '\\,')
-        .replace(/\r?\n/g, '\\n');
-    }
-
     const title = (ex.subject || 'موعد') + (ex.examName ? ' — ' + ex.examName : '');
     const descriptionParts = [];
     if(ex.examName) descriptionParts.push('نوع الموعد: ' + ex.examName);
     if(notes[id]) descriptionParts.push('ملاحظة: ' + notes[id]);
     descriptionParts.push('مبادرة عزْم | كلية الهندسة');
     const description = descriptionParts.join('\n');
-    const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-    const uid = escapeICS(String(id) + '-' + String(y) + String(m) + String(d) + '@azm-engineering');
 
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Azm Engineering Initiative//AR',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
-      'X-WR-CALNAME:مواعيد مبادرة عزْم',
-      'BEGIN:VEVENT',
-      'UID:' + uid,
-      'DTSTAMP:' + stamp,
-      'DTSTART;VALUE=DATE:' + y + m + d,
-      'DTEND;VALUE=DATE:' + endY + endM + endD,
-      'SUMMARY:' + escapeICS(title),
-      'DESCRIPTION:' + escapeICS(description),
-      'STATUS:CONFIRMED',
-      'SEQUENCE:0',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n') + '\r\n';
+    // لا يمكن لصفحة HTML عادية إنشاء حدث داخل Apple Calendar المحلي بصمت.
+    // نفتح نموذج إنشاء الحدث مباشرة في Google Calendar بدون تنزيل ملف.
+    const googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent(title) +
+      '&dates=' + encodeURIComponent(y + m + d + '/' + endY + endM + endD) +
+      '&details=' + encodeURIComponent(description);
 
-    /* Android: افتح صفحة إنشاء حدث في Google Calendar، وهي تضيفه مباشرة بعد الضغط على حفظ. */
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    if(isAndroid){
-      const googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-        '&text=' + encodeURIComponent(title) +
-        '&dates=' + encodeURIComponent(y + m + d + '/' + endY + endM + endD) +
-        '&details=' + encodeURIComponent(description);
-      window.location.href = googleUrl;
-      return;
-    }
-
-    const file = new File([ics], 'azm-' + id + '.ics', {type:'text/calendar'});
-
-    /* iPhone/iPad: شارك ملف التقويم مع تطبيق التقويم من ورقة المشاركة. */
-    try{
-      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-        await navigator.share({title:title, text:'إضافة الموعد إلى التقويم', files:[file]});
-        return;
-      }
-    }catch(e){
-      if(e && e.name === 'AbortError') return;
-    }
-
-    /* fallback للأجهزة/المتصفحات الأخرى */
-    const blob = new Blob([ics], {type:'text/calendar'});
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'azm-' + id + '.ics';
-    link.setAttribute('type','text/calendar');
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
-  }
-
-  function toggleStar(id){
-    if(starred.indexOf(id) === -1) starred.push(id);
-    else starred = starred.filter(function(x){ return x !== id; });
-    saveStarred();
-    renderLevelList('level3Container', LEVEL3);
-    renderLevelList('level4Container', LEVEL4);
-    if(currentView === 'upcoming') renderUpcoming();
-  }
-
-  function isUpcomingExamType(name){
-    return [
-      'الاختبار الفصلي الاول',
-      'الاختبار الفصلي الثاني',
-      'النهائي',
-      'كويز (اختبار قصير)'
-    ].indexOf((name || '').trim()) !== -1;
-  }
-
-  function buildStarredUpcoming(){
-    const saved = LEVEL3.concat(LEVEL4)
-      .filter(function(item){
-        return starred.indexOf(item.id) !== -1 && (!item.date || dayDiff(item.date) >= 0);
-      })
-      .map(function(item){
-        return {type:'starred',id:item.id,subject:item.subject,examName:item.examName,date:item.date};
-      });
-
-    const addedExams = exams
-      .filter(function(ex){
-        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
-        return destination === 'upcoming' && ex.date && dayDiff(ex.date) >= 0;
-      })
-      .map(function(ex){
-        return {type:'added-exam',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:false};
-      });
-
-    return saved.concat(addedExams).sort(sortByDate);
-  }
-
-  function buildPersonalUpcoming(){
-    return exams
-      .filter(function(ex){
-        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
-        return destination === 'personal' && ex.date && dayDiff(ex.date) >= 0;
-      })
-      .map(function(ex){
-        return {type:'personal',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:!!ex.isCustom};
-      })
-      .sort(sortByDate);
+    window.location.href = googleUrl;
   }
 
   function sortByDate(a,b){
