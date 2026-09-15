@@ -424,6 +424,8 @@
   .star-btn.on{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border));background:var(--gold-soft)}
   .note-btn:hover,.note-btn.open{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border))}
   .note-btn svg,.calendar-btn svg{width:15px;height:15px}
+  .calendar-btn{background:var(--surface-2)}
+  .note-btn{background:var(--surface-2)}
   .calendar-btn:hover{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border))}
 
   .note-box{
@@ -667,12 +669,28 @@
     #view-upcoming .badge{font-size:11px;padding:6px 8px;gap:5px}
     #view-upcoming .badge .status-icon{width:16px;height:16px}
     #view-upcoming .countdown{font-size:15px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
-    #view-upcoming .card-actions{width:calc(100% + 126px);margin-left:-126px;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 38px;align-items:stretch;gap:6px;direction:rtl}
-    #view-upcoming .calendar-btn,#view-upcoming .note-btn{width:100%;min-width:0}
-    #view-upcoming .calendar-btn svg{width:13px;height:13px}
-    #view-upcoming .icon-btn{width:38px;min-width:38px}
-    #view-upcoming .card-actions > button{height:35px;min-height:35px;padding:0 7px;box-sizing:border-box}
-    #view-upcoming .calendar-btn span,#view-upcoming .note-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #view-upcoming .card-actions,
+    .home-near-section .card-actions{width:calc(100% + 126px);margin-left:-126px;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 38px;align-items:stretch;gap:6px;direction:rtl}
+    #view-upcoming .calendar-btn,#view-upcoming .note-btn,
+    .home-near-section .calendar-btn,.home-near-section .note-btn{width:100%;min-width:0}
+    #view-upcoming .calendar-btn svg,
+    .home-near-section .calendar-btn svg{width:13px;height:13px}
+    #view-upcoming .icon-btn,
+    .home-near-section .icon-btn{width:38px;min-width:38px}
+    #view-upcoming .card-actions > button,
+    .home-near-section .card-actions > button{height:35px;min-height:35px;padding:0 7px;box-sizing:border-box}
+    #view-upcoming .calendar-btn span,#view-upcoming .note-btn span,
+    .home-near-section .calendar-btn span,.home-near-section .note-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .home-near-section .card{padding:12px;margin-bottom:8px}
+    .home-near-section .card-main{display:block;position:relative;padding-left:126px;min-height:72px}
+    .home-near-section .card-info{width:100%;min-width:0;padding-left:0}
+    .home-near-section .status-with-countdown{position:absolute;left:0;top:0;margin-top:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;min-width:114px}
+    .home-near-section .subject{font-size:14px;line-height:1.45}
+    .home-near-section .examname{font-size:11.5px;line-height:1.45;margin-top:3px}
+    .home-near-section .date{font-size:10.5px;margin-top:3px}
+    .home-near-section .badge{font-size:11px;padding:6px 8px;gap:5px}
+    .home-near-section .badge .status-icon{width:16px;height:16px}
+    .home-near-section .countdown{font-size:15px;line-height:1.35;font-weight:900;color:var(--text);white-space:nowrap}
   }
 </style>
 </head>
