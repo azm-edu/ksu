@@ -655,21 +655,27 @@
     .note-row{flex-direction:column;align-items:stretch}
     .save-note{width:100%}
     .section-header{align-items:flex-start}
+    .home-upcoming{margin-top:14px}
+    .home-upcoming-subtitle{margin:3px 0 0;color:var(--muted);font-size:11px}
+    #homeUpcomingContainer .card{padding:12px;margin-bottom:8px}
+    #homeUpcomingContainer .card-main{display:block;position:relative;padding-left:0}
+    #homeUpcomingContainer .status{margin-top:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 
-    /* ضبط بطاقات "اختباراتي" و"مواعيدي" للجوال فقط */
+    /* بطاقات "اختباراتي" و"مواعيدي" للجوال: نفس التنسيق */
     #view-upcoming .card{padding:12px;margin-bottom:8px}
-    #view-upcoming .card-main{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:8px;padding-left:0}
-    #view-upcoming .card-info{min-width:0;width:100%}
+    #view-upcoming .card-main{display:block;position:relative;padding-left:0}
+    #view-upcoming .card-info{width:100%;min-width:0}
     #view-upcoming .subject{font-size:14px;line-height:1.45}
     #view-upcoming .examname{font-size:11.5px;line-height:1.45;margin-top:3px}
     #view-upcoming .date{font-size:10.5px;margin-top:3px}
-    #view-upcoming .status{margin:0;align-items:flex-end;gap:3px;min-width:max-content}
+    #view-upcoming .status-with-countdown{margin-top:8px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:2px;min-width:0}
     #view-upcoming .badge{font-size:9.5px;padding:5px 7px;gap:4px}
-    #view-upcoming .countdown{font-size:9.5px}
-    #view-upcoming .card-actions{grid-column:1 / -1;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;justify-content:flex-start}
+    #view-upcoming .countdown{font-size:9.5px;line-height:1.4}
+    #view-upcoming .card-actions{width:100%;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;justify-content:flex-start}
     #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 110px}
-    #view-upcoming .icon-btn,#view-upcoming .star-btn{flex:0 0 38px}
+    #view-upcoming .icon-btn{flex:0 0 38px}
     #view-upcoming .card-actions > button{height:35px;min-height:35px;padding:0 7px}
+    #homeUpcomingContainer .status-with-countdown{margin-top:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
   }
 </style>
 </head>
@@ -788,6 +794,17 @@
             <div class="form-message success" id="formSuccess">تمت إضافة الموعد إلى «المواعيد القادمة».</div>
             <button class="add-btn" id="addBtn" type="button">إضافة موعد</button>
           </div>
+
+          <section class="home-upcoming section" id="homeUpcomingSection">
+            <div class="section-header">
+              <div>
+                <h3 class="section-title">المواعيد القادمة قريباً</h3>
+                <p class="home-upcoming-subtitle"></p>
+              </div>
+              <span class="section-count" id="homeUpcomingCount">0 مواعيد</span>
+            </div>
+            <div id="homeUpcomingContainer"></div>
+          </section>
         </div>
 
         <div class="view" id="view-upcoming">
@@ -920,7 +937,7 @@
       return '<div class="status"><span class="badge st-unknown">' + STATUS_ICONS.unknown + 'التاريخ لم يُحدد</span></div>';
     }
     const st = statusFor(ex.date, kind);
-    return '<div class="status">' +
+    return '<div class="status status-with-countdown">' +
       '<span class="badge ' + st.cls + '">' + st.icon + st.label + '</span>' +
       (st.countdown ? '<span class="countdown">' + st.countdown + '</span>' : '') +
       '</div>';
@@ -1049,7 +1066,7 @@
     renderUpcoming();
   }
 
-  function downloadCalendarEvent(id){
+  async function downloadCalendarEvent(id){
     let ex = exams.find(function(item){ return item.id === id; });
     if(ex){
       ex = {id:ex.id, subject:ex.subject, examName:ex.examName, date:ex.date};
@@ -1064,7 +1081,6 @@
 
     const parts = ex.date.split('-');
     if(parts.length !== 3) return;
-
     const y = parts[0], m = parts[1], d = parts[2];
     const next = new Date(Number(y), Number(m) - 1, Number(d) + 1);
     const endY = next.getFullYear();
@@ -1079,9 +1095,14 @@
         .replace(/\r?\n/g, '\\n');
     }
 
-    const title = (ex.examName || 'موعد') + ' - ' + (ex.subject || '');
-    const description = notes[id] ? 'ملاحظة: ' + notes[id] : '';
+    const title = (ex.subject || 'موعد') + (ex.examName ? ' — ' + ex.examName : '');
+    const descriptionParts = [];
+    if(ex.examName) descriptionParts.push('نوع الموعد: ' + ex.examName);
+    if(notes[id]) descriptionParts.push('ملاحظة: ' + notes[id]);
+    descriptionParts.push('مبادرة عزْم | كلية الهندسة');
+    const description = descriptionParts.join('\n');
     const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+    const uid = escapeICS(String(id) + '-' + String(y) + String(m) + String(d) + '@azm-engineering');
 
     const ics = [
       'BEGIN:VCALENDAR',
@@ -1089,26 +1110,41 @@
       'PRODID:-//Azm Engineering Initiative//AR',
       'CALSCALE:GREGORIAN',
       'METHOD:PUBLISH',
+      'X-WR-CALNAME:مواعيد مبادرة عزْم',
       'BEGIN:VEVENT',
-      'UID:' + escapeICS(id) + '@azm-engineering',
+      'UID:' + uid,
       'DTSTAMP:' + stamp,
       'DTSTART;VALUE=DATE:' + y + m + d,
       'DTEND;VALUE=DATE:' + endY + endM + endD,
       'SUMMARY:' + escapeICS(title),
       'DESCRIPTION:' + escapeICS(description),
+      'STATUS:CONFIRMED',
+      'SEQUENCE:0',
       'END:VEVENT',
       'END:VCALENDAR'
-    ].join('\r\n');
+    ].join('\r\n') + '\r\n';
 
-    const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
+    const file = new File([new Uint8Array([0xEF,0xBB,0xBF]), ics], 'azm-' + id + '.ics', {type:'text/calendar;charset=utf-8'});
+
+    try{
+      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({title:title, text:'إضافة الموعد إلى التقويم', files:[file]});
+        return;
+      }
+    }catch(e){
+      if(e && e.name === 'AbortError') return;
+    }
+
+    const blob = new Blob([new Uint8Array([0xEF,0xBB,0xBF]), ics], {type:'text/calendar;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = 'azm-' + id + '.ics';
+    link.setAttribute('type','text/calendar');
     document.body.appendChild(link);
     link.click();
     link.remove();
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   }
 
   function toggleStar(id){
@@ -1192,15 +1228,15 @@
         '</div>' +
         statusBlock(ex, ex.type === 'personal' ? 'personal' : 'exam') +
         '<div class="card-actions">' +
-          (ex.date ? '<button class="calendar-btn" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
-          '<button class="note-btn ' + (hasNote ? 'open' : '') + '" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' +
+          (ex.date ? '<button class="calendar-btn" data-action="calendar" data-id="' + ex.id + '" type="button" title="إضافة إلى التقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>إضافة للتقويم</span></button>' : '') +
+          '<button class="note-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' +
             ICONS.note + '<span>الملاحظات</span>' +
           '</button>' +
           star +
           action +
         '</div>' +
       '</div>' +
-      '<div class="note-box ' + (hasNote ? 'open' : '') + '" id="note-' + escapeHtml(ex.id) + '">' +
+      '<div class="note-box" id="note-' + escapeHtml(ex.id) + '">' +
         '<div class="note-row">' +
           '<textarea data-note-input="' + escapeHtml(ex.id) + '" placeholder="اكتب ملاحظتك هنا...">' + escapeHtml(notes[ex.id] || '') + '</textarea>' +
           '<button class="save-note" data-action="save-note" data-id="' + ex.id + '" type="button">حفظ الملاحظة</button>' +
@@ -1234,7 +1270,7 @@
         'اختباراتي',
         saved,
         'ما عندك اختبارات مضافة، أضف اختبارًا من الصفحة الرئيسية أو احفظ مادة من قوائم المستويات.',
-        true,
+        false,
         'اختبار'
       ) +
       sectionMarkup(
@@ -1342,6 +1378,24 @@
     });
   }
 
+  function renderHomeUpcoming(){
+    const container = document.getElementById('homeUpcomingContainer');
+    const countEl = document.getElementById('homeUpcomingCount');
+    if(!container) return;
+
+    const saved = buildStarredUpcoming();
+    const personal = buildPersonalUpcoming();
+    const all = saved.concat(personal)
+      .filter(function(item){ return item.date && dayDiff(item.date) >= 0 && dayDiff(item.date) <= 7; })
+      .sort(sortByDate);
+
+    if(countEl) countEl.textContent = all.length + ' ' + (all.length === 1 ? 'موعد' : 'مواعيد');
+    container.innerHTML = all.length
+      ? all.map(function(ex){ return cardMarkup(ex, false); }).join('')
+      : '<div class="empty">لا توجد مواعيد خلال الأيام السبعة القادمة.</div>';
+    bindCardActions(container);
+  }
+
   function showView(view){
     currentView = view;
     document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
@@ -1353,6 +1407,7 @@
     });
 
     if(view === 'upcoming') renderUpcoming();
+    if(view === 'add') renderHomeUpcoming();
     if(view === 'level3') renderLevelList('level3Container', LEVEL3);
     if(view === 'level4') renderLevelList('level4Container', LEVEL4);
     closeDrawer();
@@ -1411,6 +1466,7 @@
 
   setInterval(function(){
     if(currentView === 'upcoming') renderUpcoming();
+    if(currentView === 'add') renderHomeUpcoming();
     if(currentView === 'level3') renderLevelList('level3Container', LEVEL3);
     if(currentView === 'level4') renderLevelList('level4Container', LEVEL4);
   },60000);
