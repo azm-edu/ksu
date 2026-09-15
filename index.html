@@ -478,7 +478,7 @@
   .cv2-title{font-size:16px;font-weight:900;line-height:1.5;color:var(--text);overflow-wrap:anywhere}
   .cv2-examname{font-size:13px;font-weight:700;color:var(--text-dim);margin-top:6px;overflow-wrap:anywhere}
   .cv2-date{
-    display:flex;align-items:center;justify-content:flex-end;gap:6px;
+    display:flex;align-items:center;justify-content:flex-start;gap:6px;
     margin-top:9px;font-size:12.5px;color:var(--text-faint);
   }
   .cv2-date svg{width:14px;height:14px;flex:none}
@@ -504,6 +504,10 @@
   .cv2-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cv2-btn svg{width:15px;height:15px;flex:none}
   .cv2-btn:hover,.cv2-btn.open{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border))}
+  .cv2-btn[data-action="calendar"]{background:#17191d;color:#2f7cf6;border-color:#2b2f36}
+  body.dark .cv2-btn[data-action="calendar"]{background:#e7e4dc;color:#2f7cf6;border-color:#d1cec6}
+  .cv2-btn[data-action="calendar"]:hover,.cv2-btn[data-action="calendar"].open{background:#17191d;color:#2f7cf6;border-color:#2f7cf6}
+  body.dark .cv2-btn[data-action="calendar"]:hover,body.dark .cv2-btn[data-action="calendar"].open{background:#e7e4dc;color:#2f7cf6;border-color:#2f7cf6}
   .cv2-close{font-size:17px;font-weight:700}
   .cv2-close:hover{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 50%,var(--border))}
   .cv2-star{color:var(--text-dim);font-size:17px}
@@ -1250,7 +1254,6 @@
         examLine +
         dateLine +
       '</div>' +
-      '<div class="cv2-divider"></div>' +
       '<div class="cv2-status-row">' +
         statusBlockV2(ex, ex.type === 'personal' ? 'personal' : 'exam') +
       '</div>' +
