@@ -655,13 +655,8 @@
     .note-row{flex-direction:column;align-items:stretch}
     .save-note{width:100%}
     .section-header{align-items:flex-start}
-    .home-upcoming{margin-top:14px}
-    .home-upcoming-subtitle{margin:3px 0 0;color:var(--muted);font-size:11px}
-    #homeUpcomingContainer .card{padding:12px;margin-bottom:8px}
-    #homeUpcomingContainer .card-main{display:block;position:relative;padding-left:0}
-    #homeUpcomingContainer .status{margin-top:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 
-    /* بطاقات "اختباراتي" و"مواعيدي" للجوال: نفس التنسيق */
+    /* بطاقات "اختباراتي" و"مواعيدي" للجوال: الحالة والعداد أعلى اليسار */
     #view-upcoming .card{padding:12px;margin-bottom:8px}
     #view-upcoming .card-main{display:block;position:relative;padding-left:126px;min-height:72px}
     #view-upcoming .card-info{width:100%;min-width:0;padding-left:0}
@@ -676,7 +671,6 @@
     #view-upcoming .calendar-btn,#view-upcoming .note-btn{flex:1 1 110px}
     #view-upcoming .icon-btn{flex:0 0 38px}
     #view-upcoming .card-actions > button{height:35px;min-height:35px;padding:0 7px}
-    #homeUpcomingContainer .status-with-countdown{margin-top:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
   }
 </style>
 </head>
@@ -796,15 +790,12 @@
             <button class="add-btn" id="addBtn" type="button">إضافة موعد</button>
           </div>
 
-          <section class="home-upcoming section" id="homeUpcomingSection">
+          <section class="section home-near-section" id="homeNearSection">
             <div class="section-header">
-              <div>
-                <h3 class="section-title">المواعيد القادمة قريباً</h3>
-                <p class="home-upcoming-subtitle"></p>
-              </div>
-              <span class="section-count" id="homeUpcomingCount">0 مواعيد</span>
+              <h3 class="section-title">المواعيد القادمة قريباً</h3>
+              <span class="section-count" id="homeNearCount">0 مواعيد</span>
             </div>
-            <div id="homeUpcomingContainer"></div>
+            <div id="homeNearContainer"></div>
           </section>
         </div>
 
@@ -938,7 +929,7 @@
       return '<div class="status"><span class="badge st-unknown">' + STATUS_ICONS.unknown + 'التاريخ لم يُحدد</span></div>';
     }
     const st = statusFor(ex.date, kind);
-    return '<div class="status status-with-countdown">' +
+    return '<div class="status">' +
       '<span class="badge ' + st.cls + '">' + st.icon + st.label + '</span>' +
       (st.countdown ? '<span class="countdown">' + st.countdown + '</span>' : '') +
       '</div>';
@@ -1055,6 +1046,7 @@
     successTimeout = setTimeout(function(){ successEl.style.display = 'none'; }, 4500);
 
     saveExams();
+    renderHomeNearUpcoming();
     if(currentView === 'upcoming') renderUpcoming();
   }
 
@@ -1063,6 +1055,7 @@
     delete notes[id];
     saveExams();
     saveNotes();
+    renderHomeNearUpcoming();
     // القائمة الموحدة أصبحت داخل "المواعيد القادمة" فقط.
     renderUpcoming();
   }
@@ -1082,27 +1075,103 @@
 
     const parts = ex.date.split('-');
     if(parts.length !== 3) return;
+
     const y = parts[0], m = parts[1], d = parts[2];
     const next = new Date(Number(y), Number(m) - 1, Number(d) + 1);
     const endY = next.getFullYear();
     const endM = String(next.getMonth() + 1).padStart(2, '0');
     const endD = String(next.getDate()).padStart(2, '0');
 
-    const title = (ex.subject || 'موعد') + (ex.examName ? ' — ' + ex.examName : '');
-    const descriptionParts = [];
-    if(ex.examName) descriptionParts.push('نوع الموعد: ' + ex.examName);
-    if(notes[id]) descriptionParts.push('ملاحظة: ' + notes[id]);
-    descriptionParts.push('مبادرة عزْم | كلية الهندسة');
-    const description = descriptionParts.join('\n');
+    function escapeICS(value){
+      return String(value || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,')
+        .replace(/\r?\n/g, '\\n');
+    }
 
-    // لا يمكن لصفحة HTML عادية إنشاء حدث داخل Apple Calendar المحلي بصمت.
-    // نفتح نموذج إنشاء الحدث مباشرة في Google Calendar بدون تنزيل ملف.
-    const googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-      '&text=' + encodeURIComponent(title) +
-      '&dates=' + encodeURIComponent(y + m + d + '/' + endY + endM + endD) +
-      '&details=' + encodeURIComponent(description);
+    const title = (ex.examName || 'موعد') + ' - ' + (ex.subject || '');
+    const description = notes[id] ? 'ملاحظة: ' + notes[id] : '';
+    const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
 
-    window.location.href = googleUrl;
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Azm Engineering Initiative//AR',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      'UID:' + escapeICS(id) + '@azm-engineering',
+      'DTSTAMP:' + stamp,
+      'DTSTART;VALUE=DATE:' + y + m + d,
+      'DTEND;VALUE=DATE:' + endY + endM + endD,
+      'SUMMARY:' + escapeICS(title),
+      'DESCRIPTION:' + escapeICS(description),
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'azm-' + id + '.ics';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function toggleStar(id){
+    if(starred.indexOf(id) === -1) starred.push(id);
+    else starred = starred.filter(function(x){ return x !== id; });
+    saveStarred();
+    renderLevelList('level3Container', LEVEL3);
+    renderLevelList('level4Container', LEVEL4);
+    renderHomeNearUpcoming();
+    if(currentView === 'upcoming') renderUpcoming();
+  }
+
+  function isUpcomingExamType(name){
+    return [
+      'الاختبار الفصلي الاول',
+      'الاختبار الفصلي الثاني',
+      'النهائي',
+      'كويز (اختبار قصير)'
+    ].indexOf((name || '').trim()) !== -1;
+  }
+
+  function buildStarredUpcoming(){
+    const saved = LEVEL3.concat(LEVEL4)
+      .filter(function(item){
+        return starred.indexOf(item.id) !== -1 && (!item.date || dayDiff(item.date) >= 0);
+      })
+      .map(function(item){
+        return {type:'starred',id:item.id,subject:item.subject,examName:item.examName,date:item.date};
+      });
+
+    const addedExams = exams
+      .filter(function(ex){
+        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
+        return destination === 'upcoming' && ex.date && dayDiff(ex.date) >= 0;
+      })
+      .map(function(ex){
+        return {type:'added-exam',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:false};
+      });
+
+    return saved.concat(addedExams).sort(sortByDate);
+  }
+
+  function buildPersonalUpcoming(){
+    return exams
+      .filter(function(ex){
+        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
+        return destination === 'personal' && ex.date && dayDiff(ex.date) >= 0;
+      })
+      .map(function(ex){
+        return {type:'personal',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:!!ex.isCustom};
+      })
+      .sort(sortByDate);
   }
 
   function sortByDate(a,b){
@@ -1135,7 +1204,7 @@
         '</div>' +
         statusBlock(ex, ex.type === 'personal' ? 'personal' : 'exam') +
         '<div class="card-actions">' +
-          (ex.date ? '<button class="calendar-btn" data-action="calendar" data-id="' + ex.id + '" type="button" title="إضافة إلى التقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>إضافة للتقويم</span></button>' : '') +
+          (ex.date ? '<button class="calendar-btn" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
           '<button class="note-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' +
             ICONS.note + '<span>الملاحظات</span>' +
           '</button>' +
@@ -1165,6 +1234,29 @@
       '</div>' +
       cards +
     '</section>';
+  }
+
+  function buildNearUpcoming(){
+    return buildStarredUpcoming().concat(buildPersonalUpcoming())
+      .filter(function(item){
+        const diff = item.date ? dayDiff(item.date) : -1;
+        return item.date && diff >= 0 && diff <= 7;
+      })
+      .sort(sortByDate);
+  }
+
+  function renderHomeNearUpcoming(){
+    const section = document.getElementById('homeNearSection');
+    const container = document.getElementById('homeNearContainer');
+    const count = document.getElementById('homeNearCount');
+    if(!section || !container) return;
+
+    const list = buildNearUpcoming();
+    if(count) count.textContent = list.length + ' ' + (list.length === 1 ? 'موعد' : 'مواعيد');
+    container.innerHTML = list.length
+      ? list.map(function(ex){ return cardMarkup(ex, false); }).join('')
+      : '<div class="empty">لا توجد مواعيد قريبة.</div>';
+    bindCardActions(container);
   }
 
   function renderUpcoming(){
@@ -1285,24 +1377,6 @@
     });
   }
 
-  function renderHomeUpcoming(){
-    const container = document.getElementById('homeUpcomingContainer');
-    const countEl = document.getElementById('homeUpcomingCount');
-    if(!container) return;
-
-    const saved = buildStarredUpcoming();
-    const personal = buildPersonalUpcoming();
-    const all = saved.concat(personal)
-      .filter(function(item){ return item.date && dayDiff(item.date) >= 0 && dayDiff(item.date) <= 7; })
-      .sort(sortByDate);
-
-    if(countEl) countEl.textContent = all.length + ' ' + (all.length === 1 ? 'موعد' : 'مواعيد');
-    container.innerHTML = all.length
-      ? all.map(function(ex){ return cardMarkup(ex, false); }).join('')
-      : '<div class="empty">لا توجد مواعيد خلال الأيام السبعة القادمة.</div>';
-    bindCardActions(container);
-  }
-
   function showView(view){
     currentView = view;
     document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
@@ -1314,7 +1388,6 @@
     });
 
     if(view === 'upcoming') renderUpcoming();
-    if(view === 'add') renderHomeUpcoming();
     if(view === 'level3') renderLevelList('level3Container', LEVEL3);
     if(view === 'level4') renderLevelList('level4Container', LEVEL4);
     closeDrawer();
@@ -1370,10 +1443,11 @@
   loadData();
   initTheme();
   showView('add');
+  renderHomeNearUpcoming();
 
   setInterval(function(){
+    renderHomeNearUpcoming();
     if(currentView === 'upcoming') renderUpcoming();
-    if(currentView === 'add') renderHomeUpcoming();
     if(currentView === 'level3') renderLevelList('level3Container', LEVEL3);
     if(currentView === 'level4') renderLevelList('level4Container', LEVEL4);
   },60000);
