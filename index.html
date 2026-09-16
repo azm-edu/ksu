@@ -7,7 +7,7 @@
 <title>مبادرة عزْم | كلية الهندسة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#f5f1e8;
@@ -66,7 +66,7 @@
       radial-gradient(circle at 90% 8%, rgba(24,43,73,.08), transparent 26%),
       var(--bg);
     color:var(--text);
-    font-family:"Noto Sans Arabic","Noto Sans",sans-serif;
+    font-family:"IBM Plex Sans Arabic","Tajawal","Segoe UI",Tahoma,Arial,sans-serif;
     transition:background .25s ease,color .25s ease;
   }
   body.dark{background:
@@ -210,11 +210,11 @@
   .upcoming-heading{align-items:center}
   .share-my-dates{
     flex:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;
-    min-height:38px;padding:0 11px;border:1px solid var(--border);
-    border-radius:11px;background:var(--surface-2);color:var(--text-dim);
+    min-height:38px;padding:0 11px;border:1px solid #DBEAFE;
+    border-radius:11px;background:#EFF6FF;color:#1D4ED8;
     font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.2s ease;
   }
-  .share-my-dates:hover{color:#2563eb;border-color:#bfdbfe;background:#eff6ff}
+  .share-my-dates:hover{color:#1D4ED8;border-color:#BFDBFE;background:#E0F2FE}
   .share-my-dates svg{width:16px;height:16px;flex:none}
   .share-modal{position:fixed;inset:0;display:none;z-index:100}
   .share-modal.open{display:grid;place-items:center}
@@ -228,7 +228,8 @@
   .share-modal-actions button{height:42px;border-radius:11px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
   .share-yes{border:1px solid #2563eb;background:#2563eb;color:#fff}
   .share-no{border:1px solid var(--border);background:var(--surface-2);color:var(--text-dim)}
-  body.dark .share-my-dates:hover{color:#93c5fd;border-color:#46546a;background:#182235}
+  body.dark .share-my-dates{background:var(--surface-2);color:var(--text-dim);border-color:var(--border)}
+  body.dark .share-my-dates:hover{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border));background:var(--surface-2)}
   body.dark .share-modal-icon{background:#17243a;color:#93c5fd}
 
   .page-heading{
@@ -338,8 +339,9 @@
     grid-column:1/-1;
     justify-self:start;
     border:0;
-    background:transparent;
-    color:#2563EB;
+    background:transparent !important;
+    color:#2563EB !important;
+    -webkit-text-fill-color:#2563EB !important;
     padding:0;
     margin-top:-2px;
     font-size:12px;
@@ -347,13 +349,14 @@
     text-decoration:none;
     cursor:pointer;
   }
-  .specialty-search-toggle:hover{text-decoration:underline}
+  #specialtySearchToggle{color:#2563EB !important;-webkit-text-fill-color:#2563EB !important;}
+  .specialty-search-toggle:hover{text-decoration:underline;color:#1D4ED8 !important}
   .form-grid.catalog-mode #collegeField,
   .form-grid.catalog-mode .catalog-field{display:block}
   #collegeField{display:none}
   .manual-subject{min-width:0}
   .form-grid.catalog-mode .manual-subject{display:none}
-  .form-grid.catalog-mode .specialty-search-toggle{color:var(--text-dim)}
+  .form-grid.catalog-mode .specialty-search-toggle{color:#2563EB !important}
   @media (max-width:600px){
     .upcoming-heading{align-items:flex-start}
     .share-my-dates{min-width:38px;width:38px;padding:0;border-radius:10px}
