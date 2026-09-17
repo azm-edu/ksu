@@ -218,6 +218,16 @@
   }
   .share-my-dates:hover{color:#1D4ED8;border-color:#BFDBFE;background:#E0F2FE}
   .share-my-dates svg{width:16px;height:16px;flex:none}
+  .delete-all-expired{
+    flex:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    min-height:38px;padding:0 11px;border:1px solid color-mix(in srgb,var(--danger) 28%,var(--border));
+    border-radius:11px;background:color-mix(in srgb,var(--danger) 8%,var(--surface));color:var(--danger);
+    font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.2s ease;
+  }
+  .delete-all-expired:hover{background:color-mix(in srgb,var(--danger) 13%,var(--surface));border-color:color-mix(in srgb,var(--danger) 42%,var(--border))}
+  .delete-all-expired svg{width:17px;height:17px;flex:none}
+  body.dark .delete-all-expired{background:color-mix(in srgb,var(--danger) 12%,var(--surface));color:#f08b8b;border-color:color-mix(in srgb,var(--danger) 35%,var(--border))}
+  body.dark .delete-all-expired:hover{background:color-mix(in srgb,var(--danger) 18%,var(--surface))}
   .share-modal{position:fixed;inset:0;display:none;z-index:100}
   .share-modal.open{display:grid;place-items:center}
   .share-modal-backdrop{position:absolute;inset:0;background:rgba(3,9,18,.52)}
@@ -364,8 +374,12 @@
   .form-grid.catalog-mode .specialty-search-toggle{color:#2563EB !important}
   @media (max-width:600px){
     .upcoming-heading{align-items:flex-start}
+    .expired-heading{align-items:flex-start}
     .share-my-dates{min-width:38px;width:38px;padding:0;border-radius:10px}
     .share-my-dates span{display:none}
+    .delete-all-expired{min-width:38px;width:38px;padding:0;border-radius:10px}
+    .delete-all-expired span{display:none}
+    .delete-all-expired svg{width:18px;height:18px}
 
     .specialty-search-toggle{justify-self:stretch;text-align:right;font-size:12px;margin-top:-1px}
   }
@@ -457,11 +471,12 @@
   }
   .status-icon{width:15px;height:15px;display:block;flex:none}
   .st-far{background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--ok)}
-  .st-near{background:color-mix(in srgb,var(--danger) 11%,transparent);color:var(--danger)}
-  .st-today{background:color-mix(in srgb,#d6a900 14%,transparent);color:#b28500}
-  .st-done{background:color-mix(in srgb,#4a4f58 13%,transparent);color:#555c67}
-  body.dark .st-today{color:#e3bd39}
-  body.dark .st-done{color:#9aa1ad}
+  .st-near{background:color-mix(in srgb,#c89a16 14%,transparent);color:#9a7300}
+  .st-today{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
+  .st-done{background:color-mix(in srgb,#626873 13%,transparent);color:#5f6670}
+  body.dark .st-near{color:#e2b84f}
+  body.dark .st-today{color:#ef7777}
+  body.dark .st-done{color:#a4aab4}
   .st-unknown{background:var(--surface-2);color:var(--text-dim)}
   .countdown{font-size:15px;color:var(--text);font-weight:800;line-height:1.35}
 
@@ -553,6 +568,14 @@
   .cv2-countdown-wrap{position:absolute;left:0;top:0;width:23%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1;transform:translateY(-3px);z-index:1;padding:10px 8px;box-sizing:border-box;background:color-mix(in srgb,var(--navy) 6%,var(--card));border:1px solid color-mix(in srgb,var(--navy) 14%,var(--border));border-radius:16px}
   .cv2-countdown{display:block;font-size:82px;font-weight:900;color:var(--navy);line-height:.9;white-space:nowrap;letter-spacing:-1.5px}
   .cv2-countdown-label{display:block;margin-top:10px;font-size:18px;font-weight:800;color:#000;line-height:1.2;white-space:nowrap}
+  .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown{font-size:54px;letter-spacing:-1px}
+  .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown-label{font-size:16px;margin-top:9px}
+  .cv2-countdown-wrap.cv2-countdown-dash .cv2-countdown{font-size:62px;letter-spacing:0}
+  .cv2-countdown-wrap.cv2-countdown-dash .cv2-countdown-label{display:none}
+  .card-v2.expired-card .cv2-head{min-height:118px}
+  .card-v2.expired-card .cv2-divider{margin:10px 0}
+  .card-v2.expired-card .cv2-info{padding-right:0}
+  .card-v2.expired-card .cv2-status{margin-top:12px}
   body.dark .cv2-countdown{color:var(--text)}
   body.dark .cv2-countdown-label{color:#fff}
   .cv2-actions{display:grid;gap:8px;direction:rtl}
@@ -803,6 +826,10 @@
     .cv2-countdown-wrap{left:0;top:0;width:24%;height:100%;align-items:center;justify-content:center;text-align:center;padding:8px 5px;transform:translateY(-2px);border-radius:14px}
     .cv2-countdown{font-size:70px;letter-spacing:-1.2px}
     .cv2-countdown-label{font-size:16px;margin-top:8px}
+    .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown{font-size:44px;letter-spacing:-.7px}
+    .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown-label{font-size:14px;margin-top:7px}
+    .cv2-countdown-wrap.cv2-countdown-dash .cv2-countdown{font-size:52px}
+    .card-v2.expired-card .cv2-head{min-height:108px}
     .cv2-btn{height:38px;font-size:11.5px}
   }
 </style>
@@ -843,6 +870,7 @@
       <button class="nav-item" data-view="upcoming" type="button">المواعيد القادمة</button>
       <button class="nav-item" data-view="level3" type="button">مواد المستوى الثالث</button>
       <button class="nav-item" data-view="level4" type="button">مواد المستوى الرابع</button>
+      <button class="nav-item" data-view="expired" type="button">مواعيدي المنتهية</button>
     </nav>
 
     <div class="drawer-socials" aria-label="روابط المبادرة">
@@ -997,6 +1025,20 @@
             </div>
           </div>
           <div id="level4Container"></div>
+        </div>
+
+        <div class="view" id="view-expired">
+          <div class="page-heading expired-heading">
+            <div>
+              <h2>مواعيدي المنتهية</h2>
+              <p>هُنا تظهر الاختبارات والمواعيد التي انتهى تاريخها تلقائيًا.</p>
+            </div>
+            <button class="delete-all-expired" id="deleteAllExpiredBtn" type="button" title="حذف الكل" aria-label="حذف جميع المواعيد المنتهية">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-.8 12.1A2 2 0 0 1 14.2 21H9.8a2 2 0 0 1-2-1.9L7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>حذف الكل</span>
+            </button>
+          </div>
+          <div id="expiredContainer"></div>
         </div>
 
         <div class="share-modal" id="shareModal" aria-hidden="true">
@@ -1203,9 +1245,15 @@
 
   function openDeleteModal(id, action){
     pendingDeleteAction = action || 'delete';
-    pendingDeleteId = id;
+    pendingDeleteId = id || null;
     const modal = document.getElementById('deleteModal');
     if(!modal) return;
+    const title = document.getElementById('deleteModalTitle');
+    if(title){
+      title.textContent = pendingDeleteAction === 'delete-all-expired'
+        ? 'هل تريد تأكيد حذف جميع المواعيد المنتهية ؟'
+        : 'هل تريد تأكيد حذف الموعد ؟';
+    }
     modal.classList.add('open');
     modal.setAttribute('aria-hidden','false');
   }
@@ -1333,6 +1381,7 @@
     exams = loadLocal(EXAMS_KEY, []);
     starred = loadLocal(STARRED_KEY, []);
     notes = loadLocal(NOTES_KEY, {});
+    cleanupExpiredAppointments();
   }
 
   function saveExams(){ saveLocal(EXAMS_KEY, exams); }
@@ -1580,6 +1629,89 @@
       .sort(sortByDate);
   }
 
+  function cleanupExpiredAppointments(){
+    const expiredIds = new Set();
+    const expiredStarredIds = new Set();
+
+    // المواعيد/الاختبارات المضافة: تحذف نهائيًا بعد 30 يومًا من تاريخها.
+    exams = exams.filter(function(ex){
+      if(!ex.date) return true;
+      const diff = dayDiff(ex.date);
+      if(diff <= -30){
+        expiredIds.add(ex.id);
+        return false;
+      }
+      return true;
+    });
+
+    // المواد المحفوظة من المستوى الثالث والرابع: إزالة الحفظ بعد 30 يومًا من انتهاء موعدها.
+    starred = starred.filter(function(id){
+      const item = LEVEL3.concat(LEVEL4).find(function(course){ return course.id === id; });
+      if(!item || !item.date) return true;
+      const keep = dayDiff(item.date) > -30;
+      if(!keep) expiredStarredIds.add(id);
+      return keep;
+    });
+
+    expiredIds.forEach(function(id){ delete notes[id]; });
+    expiredStarredIds.forEach(function(id){ delete notes[id]; });
+    saveExams();
+    saveStarred();
+    saveNotes();
+  }
+
+  function deleteAllExpired(){
+    cleanupExpiredAppointments();
+
+    const expiredExamIds = new Set();
+    const expiredStarredIds = new Set();
+
+    exams = exams.filter(function(ex){
+      if(!ex.date || dayDiff(ex.date) >= 0) return true;
+      expiredExamIds.add(ex.id);
+      return false;
+    });
+
+    starred = starred.filter(function(id){
+      const item = LEVEL3.concat(LEVEL4).find(function(course){ return course.id === id; });
+      if(!item || !item.date || dayDiff(item.date) >= 0) return true;
+      expiredStarredIds.add(id);
+      return false;
+    });
+
+    expiredExamIds.forEach(function(id){ delete notes[id]; });
+    expiredStarredIds.forEach(function(id){ delete notes[id]; });
+
+    saveExams();
+    saveStarred();
+    saveNotes();
+  }
+
+  function buildExpired(){
+    cleanupExpiredAppointments();
+
+    const saved = LEVEL3.concat(LEVEL4)
+      .filter(function(item){
+        return starred.indexOf(item.id) !== -1 && item.date && dayDiff(item.date) < 0;
+      })
+      .map(function(item){
+        return {type:'starred',id:item.id,subject:item.subject,examName:item.examName,date:item.date};
+      });
+
+    const added = exams
+      .filter(function(ex){
+        return ex.date && dayDiff(ex.date) < 0;
+      })
+      .map(function(ex){
+        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
+        return {type:destination === 'personal' ? 'personal' : 'added-exam',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:!!ex.isCustom};
+      });
+
+    return saved.concat(added).sort(function(a,b){
+      return parseDate(b.date) - parseDate(a.date);
+    });
+  }
+
   function sortByDate(a,b){
     if(!a.date && !b.date) return 0;
     if(!a.date) return 1;
@@ -1587,13 +1719,14 @@
     return parseDate(a.date) - parseDate(b.date);
   }
 
-  function cardMarkup(ex, showStar){
+  function cardMarkup(ex, showStar, isExpired){
+    isExpired = !!isExpired;
     const isAddedExam = ex.type === 'personal' || ex.type === 'added-exam';
-    const action = isAddedExam
+    const action = isExpired ? '' : (isAddedExam
       ? '<button class="cv2-btn cv2-close" data-action="del" data-id="' + ex.id + '" aria-label="حذف" title="حذف">×</button>'
-      : '<button class="cv2-btn cv2-close" data-action="del-saved" data-id="' + ex.id + '" aria-label="حذف الموعد" title="حذف الموعد">×</button>';
+      : '<button class="cv2-btn cv2-close" data-action="del-saved" data-id="' + ex.id + '" aria-label="حذف الموعد" title="حذف الموعد">×</button>');
 
-    const star = showStar && ex.type === 'starred'
+    const star = !isExpired && showStar && ex.type === 'starred'
       ? '<button class="cv2-btn cv2-star on" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">★</button>'
       : '';
 
@@ -1603,10 +1736,14 @@
       ? '<div class="cv2-date"><span>' + formatDateArabic(ex.date) + '</span><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg></div>'
       : '<div class="cv2-date"><span>التاريخ لم يُحدد</span></div>';
 
-    const hasCal = !!ex.date;
+    const hasCal = !!ex.date && !isExpired;
+    const hasNote = !isExpired;
+    const actions = (hasCal ? '<button class="cv2-btn cv2-calendar" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
+      (hasNote ? '<button class="cv2-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' + ICONS.note + '<span>الملاحظات</span></button>' : '') +
+      star + action;
     const actionsClass = hasCal ? 'cv2-actions has-cal' : 'cv2-actions no-cal';
 
-    return '<article class="card-v2" data-card-id="' + escapeHtml(ex.id) + '">' +
+    return '<article class="card-v2' + (isExpired ? ' expired-card' : '') + '" data-card-id="' + escapeHtml(ex.id) + '">' +
       '<div class="cv2-head">' +
         '<div class="cv2-info">' +
           '<div class="cv2-title">' + escapeHtml(ex.subject) + '</div>' +
@@ -1614,24 +1751,17 @@
           dateLine +
           '<div class="cv2-status">' + statusBlockV2(ex, ex.type === 'personal' ? 'personal' : 'exam') + '</div>' +
         '</div>' +
-        countdownBlockV2(ex) +
+        countdownBlockV2(ex, isExpired) +
       '</div>' +
       '<div class="cv2-divider"></div>' +
-      '<div class="' + actionsClass + '">' +
-        (hasCal ? '<button class="cv2-btn cv2-calendar" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
-        '<button class="cv2-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' +
-          ICONS.note + '<span>الملاحظات</span>' +
-        '</button>' +
-        star +
-        action +
-      '</div>' +
-      '<div class="note-box" data-note-box="' + escapeHtml(ex.id) + '">' +
+      (actions ? '<div class="' + actionsClass + '">' + actions + '</div>' : '') +
+      (hasNote ? '<div class="note-box" data-note-box="' + escapeHtml(ex.id) + '">' +
         '<div class="note-row">' +
           '<textarea data-note-input="' + escapeHtml(ex.id) + '" placeholder="اكتب ملاحظتك هنا...">' + escapeHtml(notes[ex.id] || '') + '</textarea>' +
           '<button class="save-note" data-action="save-note" data-id="' + ex.id + '" type="button">حفظ الملاحظة</button>' +
         '</div>' +
         '<div class="saved-hint">الملاحظة تحفظ على جهازك ولا تُرسل لأي جهة.</div>' +
-      '</div>' +
+      '</div>' : '') +
     '</article>';
   }
 
@@ -1643,16 +1773,18 @@
     return '<span class="badge ' + st.cls + '">' + st.icon + st.label + '</span>';
   }
 
-  function countdownBlockV2(ex){
+  function countdownBlockV2(ex, isExpired){
+    if(isExpired) return '<span class="cv2-countdown-wrap cv2-countdown-dash" aria-label="انتهى"><span class="cv2-countdown">-</span></span>';
     if(!ex.date) return '<span class="cv2-countdown-wrap" aria-hidden="true"></span>';
     const diff = dayDiff(ex.date);
     if(diff < 0) return '<span class="cv2-countdown-wrap" aria-hidden="true"></span>';
-    return '<span class="cv2-countdown-wrap"><span class="cv2-countdown">' + String(diff) + '</span><span class="cv2-countdown-label">يوم متبقي</span></span>';
+    const sizeClass = diff >= 100 ? ' cv2-countdown-100' : '';
+    return '<span class="cv2-countdown-wrap' + sizeClass + '"><span class="cv2-countdown">' + String(diff) + '</span><span class="cv2-countdown-label">يوم متبقي</span></span>';
   }
 
-  function sectionMarkup(title, list, emptyText, showStar, unit){
+  function sectionMarkup(title, list, emptyText, showStar, unit, isExpired){
     const cards = list.length
-      ? list.map(function(ex){ return cardMarkup(ex, showStar); }).join('')
+      ? list.map(function(ex){ return cardMarkup(ex, showStar, isExpired); }).join('')
       : '<div class="empty">' + emptyText + '</div>';
 
     return '<section class="section">' +
@@ -1684,6 +1816,16 @@
     container.innerHTML = list.length
       ? list.map(function(ex){ return cardMarkup(ex, false); }).join('')
       : '<div class="empty">لا توجد مواعيد قريبة.</div>';
+    bindCardActions(container);
+  }
+
+  function renderExpired(){
+    const container = document.getElementById('expiredContainer');
+    if(!container) return;
+    const expired = buildExpired();
+    container.innerHTML = expired.length
+      ? sectionMarkup('المواعيد المنتهية', expired, '', false, 'موعد', true)
+      : '<div class="empty">لا توجد مواعيد منتهية حتى الآن.</div>';
     bindCardActions(container);
   }
 
@@ -1855,6 +1997,7 @@
     if(view === 'upcoming') renderUpcoming();
     if(view === 'level3') renderLevelList('level3Container', LEVEL3);
     if(view === 'level4') renderLevelList('level4Container', LEVEL4);
+    if(view === 'expired') renderExpired();
     closeDrawer();
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -2060,10 +2203,29 @@
 
   importSharedAppointments();
 
+  const deleteAllExpiredBtn = document.getElementById('deleteAllExpiredBtn');
+  if(deleteAllExpiredBtn){
+    deleteAllExpiredBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      openDeleteModal(null, 'delete-all-expired');
+    });
+  }
+
   const deleteYesBtn = document.getElementById('deleteYesBtn');
   const deleteCancelBtn = document.getElementById('deleteCancelBtn');
   if(deleteYesBtn){
     deleteYesBtn.addEventListener('click', function(){
+      if(pendingDeleteAction === 'delete-all-expired'){
+        deleteAllExpired();
+        closeDeleteModal();
+        renderHomeNearUpcoming();
+        if(currentView === 'upcoming') renderUpcoming();
+        if(currentView === 'level3') renderLevelList('level3Container', LEVEL3);
+        if(currentView === 'level4') renderLevelList('level4Container', LEVEL4);
+        if(currentView === 'expired') renderExpired();
+        return;
+      }
       if(pendingDeleteId){
         if(pendingDeleteAction === 'unstar') toggleStar(pendingDeleteId);
         else deletePersonalExam(pendingDeleteId);
@@ -2079,10 +2241,12 @@
   });
 
   setInterval(function(){
+    cleanupExpiredAppointments();
     renderHomeNearUpcoming();
     if(currentView === 'upcoming') renderUpcoming();
     if(currentView === 'level3') renderLevelList('level3Container', LEVEL3);
     if(currentView === 'level4') renderLevelList('level4Container', LEVEL4);
+    if(currentView === 'expired') renderExpired();
   },60000);
 
 const brandHome = document.getElementById('brandHome');
