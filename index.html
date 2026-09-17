@@ -1657,6 +1657,7 @@
       history.replaceState(null,'',window.location.pathname + window.location.search);
       renderHomeNearUpcoming();
       if(currentView === 'upcoming') renderUpcoming();
+      alert('تم نسخ المواعيد في مواعيدك القادمة بنجاح');
     };
     if(yesBtn) yesBtn.onclick = accept;
     if(noBtn) noBtn.onclick = function(){
