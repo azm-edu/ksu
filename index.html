@@ -218,6 +218,16 @@
   }
   .share-my-dates:hover{color:#1D4ED8;border-color:#BFDBFE;background:#E0F2FE}
   .share-my-dates svg{width:16px;height:16px;flex:none}
+  .delete-all-expired{
+    flex:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    min-height:38px;padding:0 11px;border:1px solid color-mix(in srgb,var(--danger) 28%,var(--border));
+    border-radius:11px;background:color-mix(in srgb,var(--danger) 8%,var(--surface));color:var(--danger);
+    font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.2s ease;
+  }
+  .delete-all-expired:hover{background:color-mix(in srgb,var(--danger) 13%,var(--surface));border-color:color-mix(in srgb,var(--danger) 42%,var(--border))}
+  .delete-all-expired svg{width:17px;height:17px;flex:none}
+  body.dark .delete-all-expired{background:color-mix(in srgb,var(--danger) 12%,var(--surface));color:#f08b8b;border-color:color-mix(in srgb,var(--danger) 35%,var(--border))}
+  body.dark .delete-all-expired:hover{background:color-mix(in srgb,var(--danger) 18%,var(--surface))}
   .share-modal{position:fixed;inset:0;display:none;z-index:100}
   .share-modal.open{display:grid;place-items:center}
   .share-modal-backdrop{position:absolute;inset:0;background:rgba(3,9,18,.52)}
@@ -233,6 +243,18 @@
   body.dark .share-my-dates{background:#F8FAFC;color:#2563EB;border-color:#F8FAFC}
   body.dark .share-my-dates:hover{background:#E2E8F0;color:#2563EB;border-color:#E2E8F0}
   body.dark .share-modal-icon{background:#17243a;color:#93c5fd}
+  .share-options-box{width:min(520px,calc(100% - 24px));padding:20px}
+  .share-options-icon{background:#eff6ff;color:#2563eb}
+  .share-image-preview-wrap{width:100%;max-height:min(48vh,520px);overflow:auto;margin:2px 0 16px;border:1px solid var(--border);border-radius:14px;background:var(--surface-2);padding:8px;box-sizing:border-box}
+  .share-image-preview{display:block;width:100%;height:auto;border-radius:9px;background:#fff}
+  .share-options-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .share-options-actions button{min-height:44px;border-radius:11px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+  .share-options-actions svg{width:18px;height:18px;flex:none}
+  .share-image-save{border:1px solid #2563eb;background:#2563eb;color:#fff}
+  .share-link-btn{border:1px solid var(--border);background:var(--surface-2);color:var(--text)}
+  .share-options-close{width:100%;height:40px;margin-top:9px;border:1px solid var(--border);border-radius:11px;background:transparent;color:var(--text-dim);font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+  body.dark .share-options-icon{background:#17243a;color:#93c5fd}
+  body.dark .share-image-preview-wrap{background:#111827}
   .delete-modal-icon{background:#fdecec;color:#c65353}
   body.dark .delete-modal-icon{background:#2a1518;color:#f08b8b}
   .delete-yes{border:1px solid var(--danger);background:var(--danger);color:#fff}
@@ -364,8 +386,17 @@
   .form-grid.catalog-mode .specialty-search-toggle{color:#2563EB !important}
   @media (max-width:600px){
     .upcoming-heading{align-items:flex-start}
+    .expired-heading{align-items:flex-start}
     .share-my-dates{min-width:38px;width:38px;padding:0;border-radius:10px}
     .share-my-dates span{display:none}
+    .delete-all-expired{min-width:38px;width:38px;padding:0;border-radius:10px}
+    .delete-all-expired span{display:none}
+    .delete-all-expired svg{width:18px;height:18px}
+    .share-options-box{width:calc(100% - 20px);padding:16px}
+    .share-image-preview-wrap{max-height:46vh;margin-bottom:12px}
+    .share-options-actions{grid-template-columns:1fr}
+    .share-options-actions button{min-height:42px}
+    .share-options-close{height:38px}
 
     .specialty-search-toggle{justify-self:stretch;text-align:right;font-size:12px;margin-top:-1px}
   }
@@ -457,11 +488,12 @@
   }
   .status-icon{width:15px;height:15px;display:block;flex:none}
   .st-far{background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--ok)}
-  .st-near{background:color-mix(in srgb,var(--danger) 11%,transparent);color:var(--danger)}
-  .st-today{background:color-mix(in srgb,#d6a900 14%,transparent);color:#b28500}
-  .st-done{background:color-mix(in srgb,#4a4f58 13%,transparent);color:#555c67}
-  body.dark .st-today{color:#e3bd39}
-  body.dark .st-done{color:#9aa1ad}
+  .st-near{background:color-mix(in srgb,#c89a16 14%,transparent);color:#9a7300}
+  .st-today{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
+  .st-done{background:color-mix(in srgb,#626873 13%,transparent);color:#5f6670}
+  body.dark .st-near{color:#e2b84f}
+  body.dark .st-today{color:#ef7777}
+  body.dark .st-done{color:#a4aab4}
   .st-unknown{background:var(--surface-2);color:var(--text-dim)}
   .countdown{font-size:15px;color:var(--text);font-weight:800;line-height:1.35}
 
@@ -550,9 +582,17 @@
   .cv2-status{display:block !important;position:relative;clear:both;width:100%;box-sizing:border-box;margin-top:14px;text-align:right}
   .cv2-status .badge{display:inline-flex;align-items:center;justify-content:center;font-size:15px;padding:10px 14px;gap:10px;margin-top:0}
   .cv2-status .status-icon{width:24px;height:24px}
-  .cv2-countdown-wrap{position:absolute;left:0;top:0;width:23%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1;transform:translateY(-3px);z-index:1;padding:0;box-sizing:border-box}
+  .cv2-countdown-wrap{position:absolute;left:0;top:0;width:23%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1;transform:translateY(-3px);z-index:1;padding:10px 8px;box-sizing:border-box;background:color-mix(in srgb,var(--navy) 6%,var(--card));border:1px solid color-mix(in srgb,var(--navy) 14%,var(--border));border-radius:16px}
   .cv2-countdown{display:block;font-size:82px;font-weight:900;color:var(--navy);line-height:.9;white-space:nowrap;letter-spacing:-1.5px}
   .cv2-countdown-label{display:block;margin-top:10px;font-size:18px;font-weight:800;color:#000;line-height:1.2;white-space:nowrap}
+  .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown{font-size:54px;letter-spacing:-1px}
+  .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown-label{font-size:16px;margin-top:9px}
+  .cv2-countdown-wrap.cv2-countdown-dash .cv2-countdown{font-size:62px;letter-spacing:0}
+  .cv2-countdown-wrap.cv2-countdown-dash .cv2-countdown-label{display:none}
+  .card-v2.expired-card .cv2-head{min-height:118px}
+  .card-v2.expired-card .cv2-divider{margin:10px 0}
+  .card-v2.expired-card .cv2-info{padding-right:0}
+  .card-v2.expired-card .cv2-status{margin-top:12px}
   body.dark .cv2-countdown{color:var(--text)}
   body.dark .cv2-countdown-label{color:#fff}
   .cv2-actions{display:grid;gap:8px;direction:rtl}
@@ -800,9 +840,13 @@
     .cv2-status{display:block !important;position:relative;clear:both;width:100%;margin-top:12px;text-align:right}
     .cv2-status .badge{display:inline-flex;align-items:center;justify-content:center;font-size:13px;padding:9px 11px;gap:8px;margin-top:0}
     .cv2-status .status-icon{width:21px;height:21px}
-    .cv2-countdown-wrap{left:0;top:0;width:24%;height:100%;align-items:center;justify-content:center;text-align:center;padding:0;transform:translateY(-2px)}
-    .cv2-countdown{font-size:70px;letter-spacing:-1.2px}
-    .cv2-countdown-label{font-size:16px;margin-top:8px}
+    .cv2-countdown-wrap{left:8px;top:50%;width:100px;height:100px;align-items:center;justify-content:center;text-align:center;padding:6px;transform:translateY(-50%);box-sizing:border-box;border-radius:14px}
+    .cv2-countdown{font-size:60px;letter-spacing:-1.2px}
+    .cv2-countdown-label{font-size:14px;margin-top:7px}
+    .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown{font-size:44px;letter-spacing:-.7px}
+    .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown-label{font-size:14px;margin-top:7px}
+    .cv2-countdown-wrap.cv2-countdown-dash .cv2-countdown{font-size:52px}
+    .card-v2.expired-card .cv2-head{min-height:108px}
     .cv2-btn{height:38px;font-size:11.5px}
   }
 </style>
@@ -843,6 +887,7 @@
       <button class="nav-item" data-view="upcoming" type="button">المواعيد القادمة</button>
       <button class="nav-item" data-view="level3" type="button">مواد المستوى الثالث</button>
       <button class="nav-item" data-view="level4" type="button">مواد المستوى الرابع</button>
+      <button class="nav-item" data-view="expired" type="button">مواعيدي المنتهية</button>
     </nav>
 
     <div class="drawer-socials" aria-label="روابط المبادرة">
@@ -999,6 +1044,20 @@
           <div id="level4Container"></div>
         </div>
 
+        <div class="view" id="view-expired">
+          <div class="page-heading expired-heading">
+            <div>
+              <h2>مواعيدي المنتهية</h2>
+              <p>هُنا تظهر الاختبارات والمواعيد التي انتهى تاريخها تلقائيًا.</p>
+            </div>
+            <button class="delete-all-expired" id="deleteAllExpiredBtn" type="button" title="حذف الكل" aria-label="حذف جميع المواعيد المنتهية">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-.8 12.1A2 2 0 0 1 14.2 21H9.8a2 2 0 0 1-2-1.9L7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>حذف الكل</span>
+            </button>
+          </div>
+          <div id="expiredContainer"></div>
+        </div>
+
         <div class="share-modal" id="shareModal" aria-hidden="true">
           <div class="share-modal-backdrop" data-share-close></div>
           <div class="share-modal-box" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
@@ -1011,6 +1070,31 @@
               <button type="button" class="share-yes" id="shareYesBtn">نعم</button>
               <button type="button" class="share-no" id="shareNoBtn">لا</button>
             </div>
+          </div>
+        </div>
+
+        <div class="share-modal share-options-modal" id="shareOptionsModal" aria-hidden="true">
+          <div class="share-modal-backdrop" data-share-options-close></div>
+          <div class="share-modal-box share-options-box" role="dialog" aria-modal="true" aria-labelledby="shareOptionsTitle">
+            <div class="share-modal-icon share-options-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 id="shareOptionsTitle">مشاركة مواعيدي</h3>
+            <p>صورة مرتبة لمواعيدك القادمة، أو شارك الرابط ليتمكن الشخص الآخر من نسخ المواعيد.</p>
+            <div class="share-image-preview-wrap">
+              <canvas id="shareAppointmentsCanvas" class="share-image-preview" aria-label="صورة معاينة للمواعيد"></canvas>
+            </div>
+            <div class="share-options-actions">
+              <button type="button" class="share-image-save" id="saveShareImageBtn">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v11m0 0-4-4m4 4 4-4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>مشاركة المواعيد</span>
+              </button>
+              <button type="button" class="share-link-btn" id="shareAppointmentsLinkBtn">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="18" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="19" r="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8.3 10.8 15.7 6.2M8.3 13.2l7.4 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span>مشاركة مواعيدي</span>
+              </button>
+            </div>
+            <button type="button" class="share-options-close" id="shareOptionsCloseBtn">تراجع</button>
           </div>
         </div>
 
@@ -1203,9 +1287,15 @@
 
   function openDeleteModal(id, action){
     pendingDeleteAction = action || 'delete';
-    pendingDeleteId = id;
+    pendingDeleteId = id || null;
     const modal = document.getElementById('deleteModal');
     if(!modal) return;
+    const title = document.getElementById('deleteModalTitle');
+    if(title){
+      title.textContent = pendingDeleteAction === 'delete-all-expired'
+        ? 'هل تريد تأكيد حذف جميع المواعيد المنتهية ؟'
+        : 'هل تريد تأكيد حذف الموعد ؟';
+    }
     modal.classList.add('open');
     modal.setAttribute('aria-hidden','false');
   }
@@ -1220,12 +1310,11 @@
   }
 
   function makeShareLink(){
+    // صيغة مختصرة للرابط: نحول كل موعد إلى مصفوفة بدل أسماء خصائص طويلة.
     const payload = {
       v:2,
-      // رمز فريد لكل عملية مشاركة حتى يكون الرابط الجديد مختلفًا عن السابق.
-      shareId: Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,10),
       exams: exams.map(function(ex){
-        return {subject:ex.subject || '', examName:ex.examName || '', isCustom:!!ex.isCustom, destination:ex.destination || '', date:ex.date || ''};
+        return [ex.subject || '', ex.examName || '', !!ex.isCustom, ex.destination || '', ex.date || ''];
       }),
       starred: starred.slice()
     };
@@ -1246,25 +1335,234 @@
     return !!ok;
   }
 
+  function getShareAppointments(){
+    return buildStarredUpcoming().concat(buildPersonalUpcoming())
+      .filter(function(item, index, arr){
+        return item && item.date && arr.findIndex(function(x){ return x.id === item.id; }) === index;
+      })
+      .sort(sortByDate);
+  }
+
+  function drawShareAppointmentsImage(){
+    const canvas = document.getElementById('shareAppointmentsCanvas');
+    if(!canvas) return '';
+
+    const items = getShareAppointments();
+    const isDark = document.body.classList.contains('dark');
+    const width = 1080;
+    const cardHeight = 150;
+    const gap = 18;
+    const top = 205;
+    const bottom = 55;
+    const height = Math.max(540, top + (items.length ? items.length * cardHeight + (items.length - 1) * gap : 150) + bottom);
+    const scale = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    canvas.style.aspectRatio = width + ' / ' + height;
+
+    const ctx = canvas.getContext('2d');
+    if(!ctx) return '';
+    ctx.setTransform(scale,0,0,scale,0,0);
+    ctx.clearRect(0,0,width,height);
+
+    const colors = isDark ? {
+      bg:'#0f172a',
+      title:'#f8fafc',
+      muted:'#94a3b8',
+      line:'#334155',
+      card:'#111827',
+      cardBorder:'#334155',
+      text:'#f8fafc',
+      accent:'#93c5fd',
+      statusNear:'#facc15',
+      statusFar:'#4ade80',
+      statusToday:'#f87171'
+    } : {
+      bg:'#ffffff',
+      title:'#0f2747',
+      muted:'#6b7280',
+      line:'#e5e7eb',
+      card:'#f8fafc',
+      cardBorder:'#dbe3ee',
+      text:'#0f172a',
+      accent:'#0f2747',
+      statusNear:'#a16207',
+      statusFar:'#15803d',
+      statusToday:'#dc2626'
+    };
+
+    ctx.fillStyle = colors.bg;
+    ctx.fillRect(0,0,width,height);
+
+    // شعار عزْم في أعلى يسار الصورة، مع استخدام نسخة الشعار الموافقة للوضع الحالي.
+    const logo = document.getElementById('bannerLogo') || document.getElementById('topBrandLogo');
+    if(logo && logo.complete && logo.naturalWidth){
+      const maxW = 150;
+      const maxH = 78;
+      const ratio = Math.min(maxW / logo.naturalWidth, maxH / logo.naturalHeight);
+      const logoW = logo.naturalWidth * ratio;
+      const logoH = logo.naturalHeight * ratio;
+      ctx.drawImage(logo, 58, 24, logoW, logoH);
+    }
+
+    ctx.direction = 'rtl';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = colors.title;
+    ctx.font = '900 38px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+    ctx.fillText('مواعيدي القادمة', width - 58, 62);
+    ctx.fillStyle = colors.muted;
+    ctx.font = '700 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+    ctx.fillText('مواعيدك مرتبة حسب التاريخ', width - 58, 96);
+    ctx.strokeStyle = colors.line;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(58,145);
+    ctx.lineTo(width - 58,145);
+    ctx.stroke();
+
+    if(!items.length){
+      ctx.fillStyle = colors.card;
+      ctx.strokeStyle = colors.cardBorder;
+      roundRect(ctx,58,top,width-116,150,22);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = colors.muted;
+      ctx.textAlign = 'center';
+      ctx.font = '800 24px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+      ctx.fillText('لا توجد مواعيد قادمة للمشاركة', width/2, top + 85);
+    }else{
+      items.forEach(function(item,index){
+        const y = top + index * (cardHeight + gap);
+        ctx.fillStyle = colors.card;
+        ctx.strokeStyle = colors.cardBorder;
+        ctx.lineWidth = 2;
+        roundRect(ctx,58,y,width-116,cardHeight,20);
+        ctx.fill(); ctx.stroke();
+
+        ctx.textAlign = 'right';
+        ctx.direction = 'rtl';
+        ctx.fillStyle = colors.text;
+        ctx.font = '900 25px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+        ctx.fillText(String(item.subject || ''), width - 86, y + 42);
+
+        if(item.examName){
+          ctx.fillStyle = colors.muted;
+          ctx.font = '700 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+          ctx.fillText(String(item.examName), width - 86, y + 75);
+        }
+
+        ctx.fillStyle = colors.muted;
+        ctx.font = '700 17px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+        ctx.fillText(formatDateArabic(item.date), width - 86, y + 112);
+
+        const diff = dayDiff(item.date);
+        let statusText = diff === 0 ? 'اليوم' : (diff <= 7 ? 'اقترب الاختبار' : 'متبقي وقت');
+        if(item.type === 'personal') statusText = diff === 0 ? 'اليوم' : (diff <= 7 ? 'اقترب الموعد' : 'متبقي وقت');
+        ctx.textAlign = 'left';
+        ctx.font = '800 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+        ctx.fillStyle = diff === 0 ? colors.statusToday : (diff <= 7 ? colors.statusNear : colors.statusFar);
+        ctx.fillText(statusText, 86, y + 43);
+        ctx.fillStyle = colors.accent;
+        ctx.font = '900 34px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+        ctx.fillText(String(diff), 86, y + 88);
+        ctx.fillStyle = colors.muted;
+        ctx.font = '700 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+        ctx.fillText('يوم متبقي', 86, y + 113);
+      });
+    }
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = colors.muted;
+    ctx.font = '600 14px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+    ctx.fillText('مبادرة عزْم', width/2, height - 24);
+    return canvas.toDataURL('image/png');
+  }
+
+  function roundRect(ctx,x,y,w,h,r){
+    const radius = Math.min(r,w/2,h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+radius,y);
+    ctx.arcTo(x+w,y,x+w,y+h,radius);
+    ctx.arcTo(x+w,y+h,x,y+h,radius);
+    ctx.arcTo(x,y+h,x,y,radius);
+    ctx.arcTo(x,y,x+w,y,radius);
+    ctx.closePath();
+  }
+
+  function openShareOptionsModal(){
+    const modal = document.getElementById('shareOptionsModal');
+    if(!modal) return;
+    drawShareAppointmentsImage();
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+  }
+
+  function closeShareOptionsModal(){
+    const modal = document.getElementById('shareOptionsModal');
+    if(!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+  }
+
+  async function saveShareImage(){
+    const canvas = document.getElementById('shareAppointmentsCanvas');
+    if(!canvas) return;
+
+    // شارك الصورة مباشرة إذا كان المتصفح يدعم مشاركة الملفات.
+    try{
+      const blob = await new Promise(function(resolve){ canvas.toBlob(resolve, 'image/png'); });
+      if(blob && navigator.share){
+        const file = new File([blob], 'مواعيدي.png', {type:'image/png'});
+        if(!navigator.canShare || navigator.canShare({files:[file]})){
+          await navigator.share({
+            title:'مواعيدي',
+            text:'مواعيدي في مبادرة عزم',
+            files:[file]
+          });
+          return;
+        }
+      }
+    }catch(e){
+      if(e && e.name === 'AbortError') return;
+    }
+
+    // إذا لم تتوفر مشاركة الملفات، نحفظ الصورة كبديل.
+    try{
+      const link = document.createElement('a');
+      link.download = 'مواعيدي.png';
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }catch(e){
+      alert('تعذر مشاركة الصورة على هذا الجهاز.');
+    }
+  }
+
   async function shareMyDates(){
     const link = makeShareLink();
     if(!link){ alert('تعذر إنشاء رابط المشاركة.'); return; }
+    openShareOptionsModal();
+  }
 
-    // على الجوال: افتح قائمة المشاركة مباشرة إذا كانت متاحة.
-    if(navigator.share){
-      try{
+  async function shareAppointmentsLink(){
+    const link = makeShareLink();
+    if(!link){ alert('تعذر إنشاء رابط المشاركة.'); return; }
+
+    // مشاركة مباشرة مثل زر المشاركة في الآيفون، بدون نسخ ولصق.
+    try{
+      if(navigator.share){
         await navigator.share({
-          title:'مشاركة مواعيدي',
-          text:'هذه مواعيدي في مبادرة عزم',
+          title:'مواعيدي',
+          text:'مواعيدي في مبادرة عزم',
           url:link
         });
         return;
-      }catch(e){
-        // إلغاء المستخدم للمشاركة لا يعتبر خطأ؛ نكمل بخيار النسخ فقط عند الحاجة.
-        if(e && e.name === 'AbortError') return;
       }
+    }catch(e){
+      if(e && e.name === 'AbortError') return;
     }
 
+    // أجهزة لا تدعم المشاركة المباشرة: نستخدم النسخ كحل احتياطي.
     let copied = false;
     try{
       if(navigator.clipboard && window.isSecureContext){
@@ -1272,43 +1570,83 @@
         copied = true;
       }
     }catch(e){}
-
     if(!copied) copied = copyTextFallback(link);
-
-    if(copied){
-      alert('تم نسخ رابط مشاركة مواعيدك. أرسله للشخص الذي تريد المشاركة معه.');
-    }else{
-      // في حالة فتح الملف محليًا ومنع المتصفح النسخ، نعرض الرابط للمستخدم بدل أن يبدو الزر متعطلًا.
-      window.prompt('انسخ رابط مشاركة مواعيدك:', link);
-    }
+    if(copied) alert('تم نسخ رابط مواعيدك.');
+    else window.prompt('رابط مواعيدك:', link);
   }
 
   function makeImportedId(index){
     return 'p-share-' + Date.now().toString(36) + '-' + index + '-' + Math.random().toString(36).slice(2,7);
   }
 
+  // يمنع إعادة استخدام رابط المشاركة على نفس الجهاز/المتصفح،
+  // بينما يسمح باستخدام الرابط نفسه من أجهزة ومتصفحات أخرى.
+  const USED_SHARE_LINKS_KEY = 'azm_used_share_links_v1';
+  function getUsedShareLinks(){
+    try{
+      const value = JSON.parse(localStorage.getItem(USED_SHARE_LINKS_KEY) || '[]');
+      return Array.isArray(value) ? value : [];
+    }catch(e){ return []; }
+  }
+  function isShareLinkUsed(hash){
+    if(!hash) return false;
+    return getUsedShareLinks().indexOf(hash) !== -1;
+  }
+  function markShareLinkUsed(hash){
+    if(!hash) return;
+    try{
+      const used = getUsedShareLinks();
+      if(used.indexOf(hash) === -1){
+        used.push(hash);
+        // الاحتفاظ بآخر 200 رابط حتى لا تكبر بيانات المتصفح بلا حدود.
+        localStorage.setItem(USED_SHARE_LINKS_KEY, JSON.stringify(used.slice(-200)));
+      }
+    }catch(e){}
+  }
+  function clearSharedHash(){
+    history.replaceState(null,'',window.location.pathname + window.location.search);
+  }
+
   function importSharedAppointments(){
     const hash = window.location.hash || '';
     const prefix = '#sharedAppointments=';
     if(hash.indexOf(prefix) !== 0) return;
+
+    // نفس الرابط على نفس المتصفح لا يُقبل مرة ثانية.
+    if(isShareLinkUsed(hash)){
+      alert('تم استخدام رابط المشاركة مسبقًا على هذا المتصفح.');
+      clearSharedHash();
+      return;
+    }
+
     const data = decodeShareData(hash.slice(prefix.length));
     if(!data || !Array.isArray(data.exams) || !Array.isArray(data.starred)){
-      history.replaceState(null,'',window.location.pathname + window.location.search);
+      clearSharedHash();
       return;
     }
 
     const yesBtn = document.getElementById('shareYesBtn');
     const noBtn = document.getElementById('shareNoBtn');
     const accept = function(){
+      // تسجيل الاستخدام عند الموافقة، وليس بمجرد فتح الرابط.
+      markShareLinkUsed(hash);
       data.exams.forEach(function(ex, index){
-        if(!ex || !ex.subject || !ex.date) return;
+        // v2 المختصر يستخدم مصفوفة، مع دعم v1 القديم حتى لا تتعطل الروابط السابقة.
+        const item = Array.isArray(ex) ? {
+          subject:ex[0] || '',
+          examName:ex[1] || '',
+          isCustom:!!ex[2],
+          destination:ex[3] || '',
+          date:ex[4] || ''
+        } : ex;
+        if(!item || !item.subject || !item.date) return;
         exams.push({
           id:makeImportedId(index),
-          subject:String(ex.subject),
-          examName:String(ex.examName || ''),
-          isCustom:!!ex.isCustom,
-          destination:ex.destination || (isUpcomingExamType(ex.examName) ? 'upcoming' : 'personal'),
-          date:String(ex.date)
+          subject:String(item.subject),
+          examName:String(item.examName || ''),
+          isCustom:!!item.isCustom,
+          destination:item.destination || (isUpcomingExamType(item.examName) ? 'upcoming' : 'personal'),
+          date:String(item.date)
         });
       });
       data.starred.forEach(function(id){
@@ -1319,6 +1657,7 @@
       history.replaceState(null,'',window.location.pathname + window.location.search);
       renderHomeNearUpcoming();
       if(currentView === 'upcoming') renderUpcoming();
+      alert('تم نسخ المواعيد في مواعيدك القادمة بنجاح');
     };
     if(yesBtn) yesBtn.onclick = accept;
     if(noBtn) noBtn.onclick = function(){
@@ -1335,6 +1674,7 @@
     exams = loadLocal(EXAMS_KEY, []);
     starred = loadLocal(STARRED_KEY, []);
     notes = loadLocal(NOTES_KEY, {});
+    cleanupExpiredAppointments();
   }
 
   function saveExams(){ saveLocal(EXAMS_KEY, exams); }
@@ -1582,6 +1922,89 @@
       .sort(sortByDate);
   }
 
+  function cleanupExpiredAppointments(){
+    const expiredIds = new Set();
+    const expiredStarredIds = new Set();
+
+    // المواعيد/الاختبارات المضافة: تحذف نهائيًا بعد 30 يومًا من تاريخها.
+    exams = exams.filter(function(ex){
+      if(!ex.date) return true;
+      const diff = dayDiff(ex.date);
+      if(diff <= -30){
+        expiredIds.add(ex.id);
+        return false;
+      }
+      return true;
+    });
+
+    // المواد المحفوظة من المستوى الثالث والرابع: إزالة الحفظ بعد 30 يومًا من انتهاء موعدها.
+    starred = starred.filter(function(id){
+      const item = LEVEL3.concat(LEVEL4).find(function(course){ return course.id === id; });
+      if(!item || !item.date) return true;
+      const keep = dayDiff(item.date) > -30;
+      if(!keep) expiredStarredIds.add(id);
+      return keep;
+    });
+
+    expiredIds.forEach(function(id){ delete notes[id]; });
+    expiredStarredIds.forEach(function(id){ delete notes[id]; });
+    saveExams();
+    saveStarred();
+    saveNotes();
+  }
+
+  function deleteAllExpired(){
+    cleanupExpiredAppointments();
+
+    const expiredExamIds = new Set();
+    const expiredStarredIds = new Set();
+
+    exams = exams.filter(function(ex){
+      if(!ex.date || dayDiff(ex.date) >= 0) return true;
+      expiredExamIds.add(ex.id);
+      return false;
+    });
+
+    starred = starred.filter(function(id){
+      const item = LEVEL3.concat(LEVEL4).find(function(course){ return course.id === id; });
+      if(!item || !item.date || dayDiff(item.date) >= 0) return true;
+      expiredStarredIds.add(id);
+      return false;
+    });
+
+    expiredExamIds.forEach(function(id){ delete notes[id]; });
+    expiredStarredIds.forEach(function(id){ delete notes[id]; });
+
+    saveExams();
+    saveStarred();
+    saveNotes();
+  }
+
+  function buildExpired(){
+    cleanupExpiredAppointments();
+
+    const saved = LEVEL3.concat(LEVEL4)
+      .filter(function(item){
+        return starred.indexOf(item.id) !== -1 && item.date && dayDiff(item.date) < 0;
+      })
+      .map(function(item){
+        return {type:'starred',id:item.id,subject:item.subject,examName:item.examName,date:item.date};
+      });
+
+    const added = exams
+      .filter(function(ex){
+        return ex.date && dayDiff(ex.date) < 0;
+      })
+      .map(function(ex){
+        const destination = ex.destination || (isUpcomingExamType(ex.examName) && !ex.isCustom ? 'upcoming' : 'personal');
+        return {type:destination === 'personal' ? 'personal' : 'added-exam',id:ex.id,subject:ex.subject,examName:ex.examName,date:ex.date,isCustom:!!ex.isCustom};
+      });
+
+    return saved.concat(added).sort(function(a,b){
+      return parseDate(b.date) - parseDate(a.date);
+    });
+  }
+
   function sortByDate(a,b){
     if(!a.date && !b.date) return 0;
     if(!a.date) return 1;
@@ -1589,13 +2012,14 @@
     return parseDate(a.date) - parseDate(b.date);
   }
 
-  function cardMarkup(ex, showStar){
+  function cardMarkup(ex, showStar, isExpired){
+    isExpired = !!isExpired;
     const isAddedExam = ex.type === 'personal' || ex.type === 'added-exam';
-    const action = isAddedExam
+    const action = isExpired ? '' : (isAddedExam
       ? '<button class="cv2-btn cv2-close" data-action="del" data-id="' + ex.id + '" aria-label="حذف" title="حذف">×</button>'
-      : '<button class="cv2-btn cv2-close" data-action="del-saved" data-id="' + ex.id + '" aria-label="حذف الموعد" title="حذف الموعد">×</button>';
+      : '<button class="cv2-btn cv2-close" data-action="del-saved" data-id="' + ex.id + '" aria-label="حذف الموعد" title="حذف الموعد">×</button>');
 
-    const star = showStar && ex.type === 'starred'
+    const star = !isExpired && showStar && ex.type === 'starred'
       ? '<button class="cv2-btn cv2-star on" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">★</button>'
       : '';
 
@@ -1605,10 +2029,14 @@
       ? '<div class="cv2-date"><span>' + formatDateArabic(ex.date) + '</span><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg></div>'
       : '<div class="cv2-date"><span>التاريخ لم يُحدد</span></div>';
 
-    const hasCal = !!ex.date;
+    const hasCal = !!ex.date && !isExpired;
+    const hasNote = !isExpired;
+    const actions = (hasCal ? '<button class="cv2-btn cv2-calendar" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
+      (hasNote ? '<button class="cv2-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' + ICONS.note + '<span>الملاحظات</span></button>' : '') +
+      star + action;
     const actionsClass = hasCal ? 'cv2-actions has-cal' : 'cv2-actions no-cal';
 
-    return '<article class="card-v2" data-card-id="' + escapeHtml(ex.id) + '">' +
+    return '<article class="card-v2' + (isExpired ? ' expired-card' : '') + '" data-card-id="' + escapeHtml(ex.id) + '">' +
       '<div class="cv2-head">' +
         '<div class="cv2-info">' +
           '<div class="cv2-title">' + escapeHtml(ex.subject) + '</div>' +
@@ -1616,24 +2044,17 @@
           dateLine +
           '<div class="cv2-status">' + statusBlockV2(ex, ex.type === 'personal' ? 'personal' : 'exam') + '</div>' +
         '</div>' +
-        countdownBlockV2(ex) +
+        countdownBlockV2(ex, isExpired) +
       '</div>' +
       '<div class="cv2-divider"></div>' +
-      '<div class="' + actionsClass + '">' +
-        (hasCal ? '<button class="cv2-btn cv2-calendar" data-action="calendar" data-id="' + ex.id + '" type="button" title="العرض بالتقويم"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS.calendar + '</svg><span>العرض بالتقويم</span></button>' : '') +
-        '<button class="cv2-btn" data-action="note" data-id="' + ex.id + '" type="button" title="إضافة ملاحظة">' +
-          ICONS.note + '<span>الملاحظات</span>' +
-        '</button>' +
-        star +
-        action +
-      '</div>' +
-      '<div class="note-box" data-note-box="' + escapeHtml(ex.id) + '">' +
+      (actions ? '<div class="' + actionsClass + '">' + actions + '</div>' : '') +
+      (hasNote ? '<div class="note-box" data-note-box="' + escapeHtml(ex.id) + '">' +
         '<div class="note-row">' +
           '<textarea data-note-input="' + escapeHtml(ex.id) + '" placeholder="اكتب ملاحظتك هنا...">' + escapeHtml(notes[ex.id] || '') + '</textarea>' +
           '<button class="save-note" data-action="save-note" data-id="' + ex.id + '" type="button">حفظ الملاحظة</button>' +
         '</div>' +
         '<div class="saved-hint">الملاحظة تحفظ على جهازك ولا تُرسل لأي جهة.</div>' +
-      '</div>' +
+      '</div>' : '') +
     '</article>';
   }
 
@@ -1645,16 +2066,18 @@
     return '<span class="badge ' + st.cls + '">' + st.icon + st.label + '</span>';
   }
 
-  function countdownBlockV2(ex){
+  function countdownBlockV2(ex, isExpired){
+    if(isExpired) return '<span class="cv2-countdown-wrap cv2-countdown-dash" aria-label="انتهى"><span class="cv2-countdown">-</span></span>';
     if(!ex.date) return '<span class="cv2-countdown-wrap" aria-hidden="true"></span>';
     const diff = dayDiff(ex.date);
     if(diff < 0) return '<span class="cv2-countdown-wrap" aria-hidden="true"></span>';
-    return '<span class="cv2-countdown-wrap"><span class="cv2-countdown">' + String(diff) + '</span><span class="cv2-countdown-label">يوم متبقي</span></span>';
+    const sizeClass = diff >= 100 ? ' cv2-countdown-100' : '';
+    return '<span class="cv2-countdown-wrap' + sizeClass + '"><span class="cv2-countdown">' + String(diff) + '</span><span class="cv2-countdown-label">يوم متبقي</span></span>';
   }
 
-  function sectionMarkup(title, list, emptyText, showStar, unit){
+  function sectionMarkup(title, list, emptyText, showStar, unit, isExpired){
     const cards = list.length
-      ? list.map(function(ex){ return cardMarkup(ex, showStar); }).join('')
+      ? list.map(function(ex){ return cardMarkup(ex, showStar, isExpired); }).join('')
       : '<div class="empty">' + emptyText + '</div>';
 
     return '<section class="section">' +
@@ -1686,6 +2109,16 @@
     container.innerHTML = list.length
       ? list.map(function(ex){ return cardMarkup(ex, false); }).join('')
       : '<div class="empty">لا توجد مواعيد قريبة.</div>';
+    bindCardActions(container);
+  }
+
+  function renderExpired(){
+    const container = document.getElementById('expiredContainer');
+    if(!container) return;
+    const expired = buildExpired();
+    container.innerHTML = expired.length
+      ? sectionMarkup('المواعيد المنتهية', expired, '', false, 'موعد', true)
+      : '<div class="empty">لا توجد مواعيد منتهية حتى الآن.</div>';
     bindCardActions(container);
   }
 
@@ -1857,6 +2290,7 @@
     if(view === 'upcoming') renderUpcoming();
     if(view === 'level3') renderLevelList('level3Container', LEVEL3);
     if(view === 'level4') renderLevelList('level4Container', LEVEL4);
+    if(view === 'expired') renderExpired();
     closeDrawer();
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -2044,6 +2478,13 @@
     document.getElementById('drawerLogo').src = src;
     const topBrandLogo = document.getElementById('topBrandLogo');
     if (topBrandLogo) topBrandLogo.src = src;
+    const shareLogo = document.getElementById('bannerLogo') || topBrandLogo;
+    if (shareLogo) {
+      shareLogo.onload = function(){
+        const shareModal = document.getElementById('shareOptionsModal');
+        if (shareModal && shareModal.classList.contains('open')) drawShareAppointmentsImage();
+      };
+    }
   }
 
   loadData();
@@ -2060,12 +2501,47 @@
     });
   }
 
+  const saveShareImageBtn = document.getElementById('saveShareImageBtn');
+  if(saveShareImageBtn){
+    saveShareImageBtn.addEventListener('click', function(){ saveShareImage(); });
+  }
+
+  const shareAppointmentsLinkBtn = document.getElementById('shareAppointmentsLinkBtn');
+  if(shareAppointmentsLinkBtn){
+    shareAppointmentsLinkBtn.addEventListener('click', function(){ shareAppointmentsLink(); });
+  }
+
+  const shareOptionsCloseBtn = document.getElementById('shareOptionsCloseBtn');
+  if(shareOptionsCloseBtn) shareOptionsCloseBtn.addEventListener('click', closeShareOptionsModal);
+  document.querySelectorAll('[data-share-options-close]').forEach(function(el){
+    el.addEventListener('click', closeShareOptionsModal);
+  });
+
   importSharedAppointments();
+
+  const deleteAllExpiredBtn = document.getElementById('deleteAllExpiredBtn');
+  if(deleteAllExpiredBtn){
+    deleteAllExpiredBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      openDeleteModal(null, 'delete-all-expired');
+    });
+  }
 
   const deleteYesBtn = document.getElementById('deleteYesBtn');
   const deleteCancelBtn = document.getElementById('deleteCancelBtn');
   if(deleteYesBtn){
     deleteYesBtn.addEventListener('click', function(){
+      if(pendingDeleteAction === 'delete-all-expired'){
+        deleteAllExpired();
+        closeDeleteModal();
+        renderHomeNearUpcoming();
+        if(currentView === 'upcoming') renderUpcoming();
+        if(currentView === 'level3') renderLevelList('level3Container', LEVEL3);
+        if(currentView === 'level4') renderLevelList('level4Container', LEVEL4);
+        if(currentView === 'expired') renderExpired();
+        return;
+      }
       if(pendingDeleteId){
         if(pendingDeleteAction === 'unstar') toggleStar(pendingDeleteId);
         else deletePersonalExam(pendingDeleteId);
@@ -2081,10 +2557,12 @@
   });
 
   setInterval(function(){
+    cleanupExpiredAppointments();
     renderHomeNearUpcoming();
     if(currentView === 'upcoming') renderUpcoming();
     if(currentView === 'level3') renderLevelList('level3Container', LEVEL3);
     if(currentView === 'level4') renderLevelList('level4Container', LEVEL4);
+    if(currentView === 'expired') renderExpired();
   },60000);
 
 const brandHome = document.getElementById('brandHome');
