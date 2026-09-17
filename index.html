@@ -1091,7 +1091,7 @@
               </button>
               <button type="button" class="share-link-btn" id="shareAppointmentsLinkBtn">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="18" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="19" r="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8.3 10.8 15.7 6.2M8.3 13.2l7.4 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                <span>نسخ مواعيدي</span>
+                <span>مشاركة مواعيدي</span>
               </button>
             </div>
             <button type="button" class="share-options-close" id="shareOptionsCloseBtn">تراجع</button>
@@ -1310,10 +1310,11 @@
   }
 
   function makeShareLink(){
+    // صيغة مختصرة للرابط: نحول كل موعد إلى مصفوفة بدل أسماء خصائص طويلة.
     const payload = {
-      v:1,
+      v:2,
       exams: exams.map(function(ex){
-        return {subject:ex.subject || '', examName:ex.examName || '', isCustom:!!ex.isCustom, destination:ex.destination || '', date:ex.date || ''};
+        return [ex.subject || '', ex.examName || '', !!ex.isCustom, ex.destination || '', ex.date || ''];
       }),
       starred: starred.slice()
     };
@@ -1546,6 +1547,22 @@
   async function shareAppointmentsLink(){
     const link = makeShareLink();
     if(!link){ alert('تعذر إنشاء رابط المشاركة.'); return; }
+
+    // مشاركة مباشرة مثل زر المشاركة في الآيفون، بدون نسخ ولصق.
+    try{
+      if(navigator.share){
+        await navigator.share({
+          title:'مواعيدي',
+          text:'مواعيدي في مبادرة عزم',
+          url:link
+        });
+        return;
+      }
+    }catch(e){
+      if(e && e.name === 'AbortError') return;
+    }
+
+    // أجهزة لا تدعم المشاركة المباشرة: نستخدم النسخ كحل احتياطي.
     let copied = false;
     try{
       if(navigator.clipboard && window.isSecureContext){
@@ -1554,8 +1571,8 @@
       }
     }catch(e){}
     if(!copied) copied = copyTextFallback(link);
-    if(copied) alert('تم نسخ مواعيدك. أرسل الرابط للشخص الذي تريد المشاركة معه.');
-    else window.prompt('انسخ رابط مواعيدك:', link);
+    if(copied) alert('تم نسخ رابط مواعيدك.');
+    else window.prompt('رابط مواعيدك:', link);
   }
 
   function makeImportedId(index){
@@ -1576,14 +1593,22 @@
     const noBtn = document.getElementById('shareNoBtn');
     const accept = function(){
       data.exams.forEach(function(ex, index){
-        if(!ex || !ex.subject || !ex.date) return;
+        // v2 المختصر يستخدم مصفوفة، مع دعم v1 القديم حتى لا تتعطل الروابط السابقة.
+        const item = Array.isArray(ex) ? {
+          subject:ex[0] || '',
+          examName:ex[1] || '',
+          isCustom:!!ex[2],
+          destination:ex[3] || '',
+          date:ex[4] || ''
+        } : ex;
+        if(!item || !item.subject || !item.date) return;
         exams.push({
           id:makeImportedId(index),
-          subject:String(ex.subject),
-          examName:String(ex.examName || ''),
-          isCustom:!!ex.isCustom,
-          destination:ex.destination || (isUpcomingExamType(ex.examName) ? 'upcoming' : 'personal'),
-          date:String(ex.date)
+          subject:String(item.subject),
+          examName:String(item.examName || ''),
+          isCustom:!!item.isCustom,
+          destination:item.destination || (isUpcomingExamType(item.examName) ? 'upcoming' : 'personal'),
+          date:String(item.date)
         });
       });
       data.starred.forEach(function(id){
