@@ -1579,19 +1579,57 @@
     return 'p-share-' + Date.now().toString(36) + '-' + index + '-' + Math.random().toString(36).slice(2,7);
   }
 
+  // يمنع إعادة استخدام رابط المشاركة على نفس الجهاز/المتصفح،
+  // بينما يسمح باستخدام الرابط نفسه من أجهزة ومتصفحات أخرى.
+  const USED_SHARE_LINKS_KEY = 'azm_used_share_links_v1';
+  function getUsedShareLinks(){
+    try{
+      const value = JSON.parse(localStorage.getItem(USED_SHARE_LINKS_KEY) || '[]');
+      return Array.isArray(value) ? value : [];
+    }catch(e){ return []; }
+  }
+  function isShareLinkUsed(hash){
+    if(!hash) return false;
+    return getUsedShareLinks().indexOf(hash) !== -1;
+  }
+  function markShareLinkUsed(hash){
+    if(!hash) return;
+    try{
+      const used = getUsedShareLinks();
+      if(used.indexOf(hash) === -1){
+        used.push(hash);
+        // الاحتفاظ بآخر 200 رابط حتى لا تكبر بيانات المتصفح بلا حدود.
+        localStorage.setItem(USED_SHARE_LINKS_KEY, JSON.stringify(used.slice(-200)));
+      }
+    }catch(e){}
+  }
+  function clearSharedHash(){
+    history.replaceState(null,'',window.location.pathname + window.location.search);
+  }
+
   function importSharedAppointments(){
     const hash = window.location.hash || '';
     const prefix = '#sharedAppointments=';
     if(hash.indexOf(prefix) !== 0) return;
+
+    // نفس الرابط على نفس المتصفح لا يُقبل مرة ثانية.
+    if(isShareLinkUsed(hash)){
+      alert('تم استخدام رابط المشاركة مسبقًا على هذا المتصفح.');
+      clearSharedHash();
+      return;
+    }
+
     const data = decodeShareData(hash.slice(prefix.length));
     if(!data || !Array.isArray(data.exams) || !Array.isArray(data.starred)){
-      history.replaceState(null,'',window.location.pathname + window.location.search);
+      clearSharedHash();
       return;
     }
 
     const yesBtn = document.getElementById('shareYesBtn');
     const noBtn = document.getElementById('shareNoBtn');
     const accept = function(){
+      // تسجيل الاستخدام عند الموافقة، وليس بمجرد فتح الرابط.
+      markShareLinkUsed(hash);
       data.exams.forEach(function(ex, index){
         // v2 المختصر يستخدم مصفوفة، مع دعم v1 القديم حتى لا تتعطل الروابط السابقة.
         const item = Array.isArray(ex) ? {
