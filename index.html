@@ -230,9 +230,12 @@
   .share-modal-actions button{height:42px;border-radius:11px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
   .share-yes{border:1px solid #2563eb;background:#2563eb;color:#fff}
   .share-no{border:1px solid var(--border);background:var(--surface-2);color:var(--text-dim)}
-  body.dark .share-my-dates{background:var(--surface-2);color:var(--text-dim);border-color:var(--border)}
-  body.dark .share-my-dates:hover{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border));background:var(--surface-2)}
+  body.dark .share-my-dates{background:#F8FAFC;color:#2563EB;border-color:#F8FAFC}
+  body.dark .share-my-dates:hover{background:#E2E8F0;color:#2563EB;border-color:#E2E8F0}
   body.dark .share-modal-icon{background:#17243a;color:#93c5fd}
+  .delete-modal-icon{background:#fdecec;color:#c65353}
+  body.dark .delete-modal-icon{background:#2a1518;color:#f08b8b}
+  .delete-yes{border:1px solid var(--danger);background:var(--danger);color:#fff}
 
   .page-heading{
     display:flex;
@@ -522,6 +525,7 @@
 
   /* بطاقة المواد الموحّدة (مواعيدي / اختباراتي / المواعيد القادمة قريباً) */
   .card-v2{
+    position:relative;
     background:var(--surface);
     border:1px solid var(--border);
     border-radius:var(--radius-lg);
@@ -531,19 +535,26 @@
     transition:.2s ease;
   }
   .card-v2:hover{border-color:var(--border-strong);box-shadow:var(--shadow-soft)}
-  .cv2-head{position:relative;padding-left:34px}
+  .cv2-head{position:relative;padding-left:28%;min-height:155px}
   .cv2-head .star-btn{position:absolute;left:0;top:0}
   .cv2-title{font-size:16px;font-weight:900;line-height:1.5;color:var(--text);overflow-wrap:anywhere}
   .cv2-examname{font-size:13px;font-weight:700;color:var(--text-dim);margin-top:6px;overflow-wrap:anywhere}
   .cv2-date{
     display:flex;align-items:center;justify-content:flex-start;gap:6px;
-    margin-top:9px;font-size:12.5px;color:var(--text-faint);
+    margin-top:7px;margin-bottom:3px;font-size:12.5px;color:var(--text-faint);
   }
   .cv2-date svg{width:14px;height:14px;flex:none}
-  .cv2-divider{height:1px;background:var(--border);margin:14px 0}
-  .cv2-status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-  .cv2-status-row .badge{padding:8px 13px;font-size:12.5px;border:1px solid color-mix(in srgb,currentColor 25%,transparent)}
-  .cv2-countdown{font-size:16px;font-weight:900;color:var(--text);white-space:nowrap}
+  .cv2-divider{height:1px;background:var(--border);margin:10px 0}
+  .cv2-status-row{display:flex;align-items:center;justify-content:flex-end;min-height:58px;direction:rtl}
+  .cv2-status-row .badge{margin-left:0;padding:8px 13px;font-size:12.5px;border:1px solid color-mix(in srgb,currentColor 25%,transparent);direction:rtl}
+  .cv2-status{display:block !important;position:relative;clear:both;width:100%;box-sizing:border-box;margin-top:14px;text-align:right}
+  .cv2-status .badge{display:inline-flex;align-items:center;justify-content:center;font-size:15px;padding:10px 14px;gap:10px;margin-top:0}
+  .cv2-status .status-icon{width:24px;height:24px}
+  .cv2-countdown-wrap{position:absolute;left:0;top:0;width:23%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1;transform:translateY(-3px);z-index:1;padding:0;box-sizing:border-box}
+  .cv2-countdown{display:block;font-size:82px;font-weight:900;color:var(--navy);line-height:.9;white-space:nowrap;letter-spacing:-1.5px}
+  .cv2-countdown-label{display:block;margin-top:10px;font-size:18px;font-weight:800;color:#000;line-height:1.2;white-space:nowrap}
+  body.dark .cv2-countdown{color:var(--text)}
+  body.dark .cv2-countdown-label{color:#fff}
   .cv2-actions{display:grid;gap:8px;direction:rtl}
   .cv2-actions.has-cal{grid-template-columns:1fr 1fr 40px}
   .cv2-actions.no-cal{grid-template-columns:1fr 40px}
@@ -564,8 +575,8 @@
   .cv2-btn:hover,.cv2-btn.open{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border))}
   .cv2-calendar{background:#EFF6FF;color:#1D4ED8;border-color:#DBEAFE}
   .cv2-calendar:hover{background:#E0F2FE;color:#1D4ED8;border-color:#BFDBFE}
-  body.dark .cv2-calendar{background:var(--surface-2);color:var(--text-dim);border-color:var(--border)}
-  body.dark .cv2-calendar:hover{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,var(--border))}
+  body.dark .cv2-calendar{background:#F8FAFC;color:#2563EB;border-color:#F8FAFC}
+  body.dark .cv2-calendar:hover{background:#E2E8F0;color:#2563EB;border-color:#E2E8F0}
   .cv2-close{font-size:17px;font-weight:700}
   .cv2-close:hover{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 50%,var(--border))}
   .cv2-star{color:var(--text-dim);font-size:17px}
@@ -622,7 +633,7 @@
     transition:.2s ease;
   }
   .footer-social:hover{
-    transform:translateY(-2px);
+    transform:translateY(-6px);
     border-color:var(--gold);
     color:var(--gold);
   }
@@ -714,7 +725,7 @@
     text-decoration:none;
     transition:.2s ease;
   }
-  .drawer-social:hover{transform:translateY(-2px);border-color:var(--gold);color:var(--gold)}
+  .drawer-social:hover{transform:translateY(-6px);border-color:var(--gold);color:var(--gold)}
   .drawer-social svg{width:20px;height:20px}
   .drawer-social.telegram{color:#229ed9}
   .drawer-social.linkedin{color:#0a66c2}
@@ -781,10 +792,17 @@
     .card-v2{padding:15px 14px 13px;margin-bottom:10px}
     .cv2-title{font-size:14.5px}
     .cv2-examname{font-size:12px;margin-top:5px}
-    .cv2-date{font-size:11.5px;margin-top:7px}
-    .cv2-divider{margin:12px 0}
-    .cv2-status-row .badge{font-size:11.5px;padding:7px 11px}
-    .cv2-countdown{font-size:14.5px}
+    .cv2-date{font-size:11.5px;margin-top:6px;margin-bottom:2px}
+    .cv2-divider{margin:10px 0}
+    .cv2-head{padding-left:43%;min-height:125px}
+    .cv2-status-row{min-height:46px;justify-content:flex-end}
+    .cv2-status-row .badge{font-size:11.5px;padding:7px 9px}
+    .cv2-status{display:block !important;position:relative;clear:both;width:100%;margin-top:12px;text-align:right}
+    .cv2-status .badge{display:inline-flex;align-items:center;justify-content:center;font-size:13px;padding:9px 11px;gap:8px;margin-top:0}
+    .cv2-status .status-icon{width:21px;height:21px}
+    .cv2-countdown-wrap{left:0;top:0;width:24%;height:100%;align-items:center;justify-content:center;text-align:center;padding:0;transform:translateY(-2px)}
+    .cv2-countdown{font-size:70px;letter-spacing:-1.2px}
+    .cv2-countdown-label{font-size:16px;margin-top:8px}
     .cv2-btn{height:38px;font-size:11.5px}
   }
 </style>
@@ -996,6 +1014,21 @@
           </div>
         </div>
 
+        <div class="share-modal" id="deleteModal" aria-hidden="true">
+          <div class="share-modal-backdrop" data-delete-close></div>
+          <div class="share-modal-box" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+            <div class="share-modal-icon delete-modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-.8 12.1A2 2 0 0 1 14.2 21H9.8a2 2 0 0 1-2-1.9L7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 id="deleteModalTitle">هل تريد تأكيد حذف الموعد ؟</h3>
+            <p></p>
+            <div class="share-modal-actions">
+              <button type="button" class="share-yes delete-yes" id="deleteYesBtn">نعم</button>
+              <button type="button" class="share-no" id="deleteCancelBtn">تراجع</button>
+            </div>
+          </div>
+        </div>
+
         <footer class="site-footer">
           <div class="footer-socials">
             <a class="footer-social" href="https://t.me/+jWEsoGgXZGhmNzI0" target="_blank" rel="noopener" aria-label="تيليجرام" title="تيليجرام">
@@ -1160,6 +1193,27 @@
 
   function closeShareModal(){
     const modal = document.getElementById('shareModal');
+    if(!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+  }
+
+  let pendingDeleteId = null;
+  let pendingDeleteAction = null;
+
+  function openDeleteModal(id, action){
+    pendingDeleteAction = action || 'delete';
+    pendingDeleteId = id;
+    const modal = document.getElementById('deleteModal');
+    if(!modal) return;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+  }
+
+  function closeDeleteModal(){
+    pendingDeleteId = null;
+    pendingDeleteAction = null;
+    const modal = document.getElementById('deleteModal');
     if(!modal) return;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden','true');
@@ -1537,7 +1591,7 @@
     const isAddedExam = ex.type === 'personal' || ex.type === 'added-exam';
     const action = isAddedExam
       ? '<button class="cv2-btn cv2-close" data-action="del" data-id="' + ex.id + '" aria-label="حذف" title="حذف">×</button>'
-      : '<button class="cv2-btn cv2-close" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">×</button>';
+      : '<button class="cv2-btn cv2-close" data-action="del-saved" data-id="' + ex.id + '" aria-label="حذف الموعد" title="حذف الموعد">×</button>';
 
     const star = showStar && ex.type === 'starred'
       ? '<button class="cv2-btn cv2-star on" data-action="unstar" data-id="' + ex.id + '" aria-label="إزالة من المحفوظات" title="إزالة من المحفوظات">★</button>'
@@ -1554,12 +1608,13 @@
 
     return '<article class="card-v2" data-card-id="' + escapeHtml(ex.id) + '">' +
       '<div class="cv2-head">' +
-        '<div class="cv2-title">' + escapeHtml(ex.subject) + '</div>' +
-        examLine +
-        dateLine +
-      '</div>' +
-      '<div class="cv2-status-row">' +
-        statusBlockV2(ex, ex.type === 'personal' ? 'personal' : 'exam') +
+        '<div class="cv2-info">' +
+          '<div class="cv2-title">' + escapeHtml(ex.subject) + '</div>' +
+          examLine +
+          dateLine +
+          '<div class="cv2-status">' + statusBlockV2(ex, ex.type === 'personal' ? 'personal' : 'exam') + '</div>' +
+        '</div>' +
+        countdownBlockV2(ex) +
       '</div>' +
       '<div class="cv2-divider"></div>' +
       '<div class="' + actionsClass + '">' +
@@ -1585,8 +1640,14 @@
       return '<span class="badge st-unknown">' + STATUS_ICONS.unknown + 'التاريخ لم يُحدد</span>';
     }
     const st = statusFor(ex.date, kind);
-    return (st.countdown ? '<span class="cv2-countdown">' + st.countdown + '</span>' : '<span></span>') +
-      '<span class="badge ' + st.cls + '">' + st.icon + st.label + '</span>';
+    return '<span class="badge ' + st.cls + '">' + st.icon + st.label + '</span>';
+  }
+
+  function countdownBlockV2(ex){
+    if(!ex.date) return '<span class="cv2-countdown-wrap" aria-hidden="true"></span>';
+    const diff = dayDiff(ex.date);
+    if(diff < 0) return '<span class="cv2-countdown-wrap" aria-hidden="true"></span>';
+    return '<span class="cv2-countdown-wrap"><span class="cv2-countdown">' + String(diff) + '</span><span class="cv2-countdown-label">يوم متبقي</span></span>';
   }
 
   function sectionMarkup(title, list, emptyText, showStar, unit){
@@ -1725,7 +1786,14 @@
     if(action === 'del'){
       e.preventDefault();
       e.stopPropagation();
-      deletePersonalExam(id);
+      openDeleteModal(id, 'delete');
+      return;
+    }
+
+    if(action === 'del-saved'){
+      e.preventDefault();
+      e.stopPropagation();
+      openDeleteModal(id, 'unstar');
       return;
     }
 
@@ -1991,6 +2059,24 @@
   }
 
   importSharedAppointments();
+
+  const deleteYesBtn = document.getElementById('deleteYesBtn');
+  const deleteCancelBtn = document.getElementById('deleteCancelBtn');
+  if(deleteYesBtn){
+    deleteYesBtn.addEventListener('click', function(){
+      if(pendingDeleteId){
+        if(pendingDeleteAction === 'unstar') toggleStar(pendingDeleteId);
+        else deletePersonalExam(pendingDeleteId);
+      }
+      closeDeleteModal();
+    });
+  }
+  if(deleteCancelBtn){
+    deleteCancelBtn.addEventListener('click', function(){ closeDeleteModal(); });
+  }
+  document.querySelectorAll('[data-delete-close]').forEach(function(el){
+    el.addEventListener('click', function(){ closeDeleteModal(); });
+  });
 
   setInterval(function(){
     renderHomeNearUpcoming();
