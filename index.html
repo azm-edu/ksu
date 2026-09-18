@@ -254,6 +254,10 @@
   .share-image-save{border:1px solid #2563eb;background:#2563eb;color:#fff}
   .share-link-btn{border:1px solid var(--border);background:var(--surface-2);color:var(--text)}
   .share-options-close{width:100%;height:40px;margin-top:9px;border:1px solid var(--border);border-radius:11px;background:transparent;color:var(--text-dim);font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+  .qr-share-box{width:min(390px,calc(100% - 24px));padding:20px}
+  .qr-code-wrap{display:grid;place-items:center;margin:4px auto 14px;padding:14px;background:#fff;border:1px solid var(--border);border-radius:16px;width:min(270px,100%);box-sizing:border-box}
+  .qr-code-wrap canvas{display:block;width:240px;height:240px;max-width:100%;image-rendering:pixelated}
+  .qr-share-box .share-options-close + .share-options-close{margin-top:7px}
   body.dark .share-options-icon{background:#17243a;color:#93c5fd}
   body.dark .share-image-preview-wrap{background:#111827}
   .delete-modal-icon{background:#fdecec;color:#c65353}
@@ -399,6 +403,9 @@
     .share-options-actions{grid-template-columns:1fr}
     .share-options-actions button{min-height:42px}
     .share-options-close{height:38px}
+    .qr-share-box{width:calc(100% - 20px);padding:16px}
+    .qr-code-wrap{width:240px;max-width:100%;padding:10px}
+    .qr-code-wrap canvas{width:210px;height:210px}
 
     .specialty-search-toggle{justify-self:stretch;text-align:right;font-size:12px;margin-top:-1px}
   }
@@ -1088,7 +1095,7 @@
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h3 id="shareOptionsTitle">مشاركة مواعيدي</h3>
-            <p>صورة مرتبة لمواعيدك القادمة، أو شارك الرابط ليتمكن الشخص الآخر من نسخ المواعيد.</p>
+            <p>شارِك الباركود لتُشارك مواعيدك</p>
             <div class="share-image-preview-wrap">
               <canvas id="shareAppointmentsCanvas" class="share-image-preview" aria-label="صورة معاينة للمواعيد"></canvas>
             </div>
@@ -1099,10 +1106,24 @@
               </button>
               <button type="button" class="share-link-btn" id="shareAppointmentsLinkBtn">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="18" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="19" r="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8.3 10.8 15.7 6.2M8.3 13.2l7.4 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                <span>مشاركة مواعيدي</span>
+                <span>نسخ مواعيدي</span>
               </button>
             </div>
             <button type="button" class="share-options-close" id="shareOptionsCloseBtn">تراجع</button>
+          </div>
+        </div>
+
+        <div class="share-modal" id="qrShareModal" aria-hidden="true">
+          <div class="share-modal-backdrop" data-qr-close></div>
+          <div class="share-modal-box qr-share-box" role="dialog" aria-modal="true" aria-labelledby="qrShareTitle">
+            <div class="share-modal-icon share-options-icon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM15 14h2v2h-2zM18 17h2v3h-3v-2h1zM14 18h2v2h-2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 id="qrShareTitle">نسخ مواعيدي</h3>
+            <p>شارِك الباركود لتُشارك مواعيدك</p>
+            <div class="qr-code-wrap"><canvas id="shareQrCanvas" aria-label="باركود نسخ المواعيد"></canvas></div>
+            <button type="button" class="share-options-close" id="shareQrCodeBtn">مشاركة الباركود</button>
+            <button type="button" class="share-options-close" id="qrShareCloseBtn">تراجع</button>
           </div>
         </div>
 
@@ -1151,6 +1172,27 @@
   let notes = {};
   let currentView = 'add';
   let successTimeout = null;
+
+  // كلمات الحظر مخزنة بترميز Unicode حتى لا تظهر نصوصها داخل الكود.
+  const BLOCKED_WORDS = [
+    '\u0643\u0644\u0628','\u0648\u0635\u062e','\u0634\u0631\u0645\u0648\u0637','\u0634\u0631\u0645\u0648\u0637\u0629','\u0642\u062d\u0628\u0629','\u062c\u0631\u0627\u0631','\u0627\u0644\u062c\u0631\u0627\u0631',
+    '\u0627\u0644\u0642\u062d\u0628\u0629\u0020\u0627\u0644\u0634\u0631\u0645\u0648\u0637','\u0627\u0644\u0634\u0631\u0645\u0648\u0637\u0629','\u0627\u0644\u0645\u0633\u0644\u0633\u0644','\u0645\u0633\u0644\u0633\u0644','\u0627\u0644\u0643\u0644\u0628',
+    '\u0627\u0644\u0641\u064a\u0644\u0645','\u0641\u064a\u0644\u0645','\u062d\u0644\u0642\u0629','\u0627\u0644\u062d\u0644\u0642\u0629','\u0627\u0644\u0633\u064a\u0646\u0645\u0627','\u0633\u064a\u0646\u0645\u0627','\u0643\u0633','\u0627\u0644\u0643\u0633',
+    '\u0632\u0628','\u0627\u0644\u0632\u0628','\u0627\u0644\u0635\u062f\u0631','\u0627\u0644\u062f\u064a\u062f','\u0635\u062f\u0631','\u062f\u064a\u062f','\u0627\u0644\u062f\u064a\u0648\u062f','\u062f\u064a\u0648\u062f',
+    '\u0645\u0643\u0648\u0629','\u0627\u0644\u0645\u0643\u0648\u0629','\u0627\u0644\u0637\u064a\u0632','\u0637\u064a\u0632','\u0641\u062e\u0630','\u0627\u0644\u0641\u062e\u0630','\u0627\u0644\u0648\u0635\u062e',
+    '\u0642\u0648\u0627\u062f','\u0627\u0644\u0642\u0648\u0627\u062f','\u0645\u062d\u0646\u0629','\u0627\u0644\u0645\u062d\u0646\u0629','\u0645\u0645\u062d\u0648\u0646','\u0627\u0644\u0645\u0645\u062d\u0648\u0646',
+    '\u0632\u0646\u062f\u064a\u0642','\u0627\u0644\u0632\u0646\u062f\u064a\u0642','\u0641\u0627\u062c\u0631','\u0627\u0644\u0641\u0627\u062c\u0631','\u062e\u0631\u0642','\u0627\u0644\u062e\u0631\u0642',
+    '\u062e\u0631\u0627','\u0627\u0644\u062e\u0631\u0627','\u062a\u0628\u0646','\u0627\u0644\u062a\u0628\u0646','\u0632\u0642','\u0627\u0644\u0632\u0642','\u0637\u0642\u0639\u0629','\u0637\u0642\u0639\u0627\u062a','\u0627\u0644\u0637\u0642\u0639\u0629','\u0627\u0644\u0637\u0642\u0639\u0627\u062a',
+    '\u0627\u0644\u0645\u0645\u062b\u0644\u0627\u062a','\u0645\u0645\u062b\u0644\u0627\u062a','\u0642\u0630\u0631','\u0627\u0644\u0642\u0630\u0631\u0629','\u062e\u0631\u0649','\u0632\u0642\u064a\u0642','\u0632\u0642\u0627\u0646','\u0627\u0644\u0632\u0642\u0627\u0646'
+  ].sort(function(a,b){ return b.length - a.length; });
+
+  function censorBlockedWords(value){
+    let text = String(value == null ? '' : value);
+    BLOCKED_WORDS.forEach(function(word){
+      text = text.split(word).join('*****');
+    });
+    return text;
+  }
 
   const LEVEL3 = [
       {id:'l3-1',subject:'ريض 106 | حساب التكامل',examName:'الاختبار الفصلي الاول',date:'2026-10-04',term:'first'},
@@ -1538,7 +1580,7 @@
     // إذا لم تتوفر مشاركة الملفات، نحفظ الصورة كبديل.
     try{
       const link = document.createElement('a');
-      link.download = 'مواعيدي.png';
+      link.download = 'dates.png';
       link.href = canvas.toDataURL('image/png');
       document.body.appendChild(link);
       link.click();
@@ -1554,25 +1596,42 @@
     openShareOptionsModal();
   }
 
-  async function shareAppointmentsLink(){
+  function openQrShareModal(){
     const link = makeShareLink();
-    if(!link){ alert('تعذر إنشاء رابط المشاركة.'); return; }
-
-    // مشاركة مباشرة مثل زر المشاركة في الآيفون، بدون نسخ ولصق.
-    try{
-      if(navigator.share){
-        await navigator.share({
-          title:'مواعيدي',
-          text:'مواعيدي في مبادرة عزم',
-          url:link
-        });
+    if(!link){ alert('تعذر إنشاء رابط نسخ المواعيد.'); return; }
+    const modal = document.getElementById('qrShareModal');
+    const canvas = document.getElementById('shareQrCanvas');
+    if(!modal || !canvas) return;
+    const draw = function(){
+      if(typeof QRCode === 'undefined' || !QRCode.toCanvas){
+        alert('تعذر إنشاء الباركود الآن. تأكد من اتصالك بالإنترنت ثم حاول مرة أخرى.');
         return;
       }
-    }catch(e){
-      if(e && e.name === 'AbortError') return;
-    }
+      QRCode.toCanvas(canvas, link, {width:240, margin:2, errorCorrectionLevel:'M'}, function(err){
+        if(err) alert('تعذر إنشاء الباركود.');
+      });
+    };
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    if(typeof QRCode === 'undefined'){
+      const waitUntilLoaded = function(){
+        if(typeof QRCode !== 'undefined'){ draw(); return; }
+        setTimeout(waitUntilLoaded, 80);
+      };
+      waitUntilLoaded();
+    }else draw();
+  }
 
-    // أجهزة لا تدعم المشاركة المباشرة: نستخدم النسخ كحل احتياطي.
+  function closeQrShareModal(){
+    const modal = document.getElementById('qrShareModal');
+    if(!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+  }
+
+  async function copyShareLinkOnly(){
+    const link = makeShareLink();
+    if(!link){ alert('تعذر إنشاء رابط نسخ المواعيد.'); return; }
     let copied = false;
     try{
       if(navigator.clipboard && window.isSecureContext){
@@ -1583,6 +1642,32 @@
     if(!copied) copied = copyTextFallback(link);
     if(copied) alert('تم نسخ رابط مواعيدك.');
     else window.prompt('رابط مواعيدك:', link);
+  }
+
+  async function shareQrCodeImage(){
+    const canvas = document.getElementById('shareQrCanvas');
+    if(!canvas){ alert('تعذر تجهيز الباركود.'); return; }
+    try{
+      const blob = await new Promise(function(resolve){ canvas.toBlob(resolve, 'image/png'); });
+      if(!blob){ throw new Error('blob'); }
+      const file = new File([blob], 'dates.png', {type:'image/png'});
+      if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+        await navigator.share({
+          title:'نسخ مواعيدي',
+          text:'باركود نسخ المواعيد',
+          files:[file]
+        });
+        return;
+      }
+      alert('المشاركة بالباركود غير متاحة على هذا الجهاز.');
+    }catch(e){
+      if(e && e.name === 'AbortError') return;
+      alert('تعذر مشاركة الباركود على هذا الجهاز.');
+    }
+  }
+
+  async function shareAppointmentsLink(){
+    openQrShareModal();
   }
 
   function makeImportedId(index){
@@ -1651,6 +1736,7 @@
     exams = loadLocal(EXAMS_KEY, []);
     starred = loadLocal(STARRED_KEY, []);
     notes = loadLocal(NOTES_KEY, {});
+
     cleanupExpiredAppointments();
   }
 
@@ -1703,7 +1789,7 @@
     const errorEl = document.getElementById('formError');
     const successEl = document.getElementById('formSuccess');
 
-    const subject = catalogMode ? courseEl.value.trim() : subjectEl.value.trim();
+    const subject = (catalogMode ? courseEl.value.trim() : subjectEl.value.trim());
     const selectedType = examNameEl.value.trim();
     const customType = customEl.value.trim();
     const date = dateEl.value;
@@ -2016,7 +2102,7 @@
     return '<article class="card-v2' + (isExpired ? ' expired-card' : '') + '" data-card-id="' + escapeHtml(ex.id) + '">' +
       '<div class="cv2-head">' +
         '<div class="cv2-info">' +
-          '<div class="cv2-title">' + escapeHtml(ex.subject) + '</div>' +
+          '<div class="cv2-title">' + escapeHtml(censorBlockedWords(ex.subject)) + '</div>' +
           examLine +
           dateLine +
           '<div class="cv2-status">' + statusBlockV2(ex, ex.type === 'personal' ? 'personal' : 'exam') + '</div>' +
@@ -2233,7 +2319,11 @@
       actionEl.classList.toggle('open', isOpen);
       if(isOpen){
         const input = box.querySelector('textarea');
-        if(input){ input.focus(); input.setSelectionRange(input.value.length,input.value.length); }
+        if(input){
+          input.value = notes[id] || '';
+          input.focus();
+          input.setSelectionRange(input.value.length,input.value.length);
+        }
       }
       return;
     }
@@ -2246,6 +2336,7 @@
       notes[id] = input ? input.value.trim() : '';
       if(!notes[id]) delete notes[id];
       saveNotes();
+      if(input) input.value = notes[id] || '';
 
       // لا نعيد رسم القائمة هنا؛ حتى لا تختفي الملاحظة أو يتغير موضع البطاقة.
       const box = card ? card.querySelector('.note-box') : null;
@@ -2576,6 +2667,14 @@
     if(currentView === 'expired') renderExpired();
   },60000);
 
+const qrCloseBtn = document.getElementById('qrShareCloseBtn');
+if(qrCloseBtn) qrCloseBtn.addEventListener('click', closeQrShareModal);
+const shareQrCodeBtn = document.getElementById('shareQrCodeBtn');
+if(shareQrCodeBtn) shareQrCodeBtn.addEventListener('click', shareQrCodeImage);
+document.querySelectorAll('[data-qr-close]').forEach(function(el){
+  el.addEventListener('click', closeQrShareModal);
+});
+
 const brandHome = document.getElementById('brandHome');
 if(brandHome){
   brandHome.addEventListener('click', function(){
@@ -2584,5 +2683,6 @@ if(brandHome){
 }
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 </body>
 </html>
