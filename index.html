@@ -1095,7 +1095,7 @@
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h3 id="shareOptionsTitle">مشاركة مواعيدي</h3>
-            <p>شارِك الباركود لتُشارك مواعيدك</p>
+            <p>شارك الباركود لتُشارك مواعيدك</p>
             <div class="share-image-preview-wrap">
               <canvas id="shareAppointmentsCanvas" class="share-image-preview" aria-label="صورة معاينة للمواعيد"></canvas>
             </div>
@@ -1120,7 +1120,7 @@
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM15 14h2v2h-2zM18 17h2v3h-3v-2h1zM14 18h2v2h-2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
             </div>
             <h3 id="qrShareTitle">نسخ مواعيدي</h3>
-            <p>شارِك الباركود لتُشارك مواعيدك</p>
+            <p>شارك الباركود لتُشارك مواعيدك</p>
             <div class="qr-code-wrap"><canvas id="shareQrCanvas" aria-label="باركود نسخ المواعيد"></canvas></div>
             <button type="button" class="share-options-close" id="shareQrCodeBtn">مشاركة الباركود</button>
             <button type="button" class="share-options-close" id="qrShareCloseBtn">تراجع</button>
@@ -1602,24 +1602,27 @@
     const modal = document.getElementById('qrShareModal');
     const canvas = document.getElementById('shareQrCanvas');
     if(!modal || !canvas) return;
-    const draw = function(){
-      if(typeof QRCode === 'undefined' || !QRCode.toCanvas){
-        alert('تعذر إنشاء الباركود الآن. تأكد من اتصالك بالإنترنت ثم حاول مرة أخرى.');
-        return;
-      }
-      QRCode.toCanvas(canvas, link, {width:240, margin:2, errorCorrectionLevel:'M'}, function(err){
-        if(err) alert('تعذر إنشاء الباركود.');
-      });
-    };
+
     modal.classList.add('open');
     modal.setAttribute('aria-hidden','false');
-    if(typeof QRCode === 'undefined'){
-      const waitUntilLoaded = function(){
-        if(typeof QRCode !== 'undefined'){ draw(); return; }
-        setTimeout(waitUntilLoaded, 80);
-      };
-      waitUntilLoaded();
-    }else draw();
+
+    // إنشاء الباركود كصورة مباشرة، بدون الاعتماد على مكتبة خارجية.
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function(){
+      const size = 300;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, size, size);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(img, 20, 20, 260, 260);
+    };
+    img.onerror = function(){
+      alert('تعذر إنشاء الباركود الآن. تأكد من اتصالك بالإنترنت ثم حاول مرة أخرى.');
+    };
+    img.src = 'https://quickchart.io/qr?text=' + encodeURIComponent(link) + '&size=300&margin=1&ecLevel=M';
   }
 
   function closeQrShareModal(){
@@ -2683,6 +2686,5 @@ if(brandHome){
 }
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 </body>
 </html>
