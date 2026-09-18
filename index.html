@@ -1156,14 +1156,14 @@
       {id:'l3-1',subject:'ريض 106 | حساب التكامل',examName:'الاختبار الفصلي الاول',date:'2026-10-04',term:'first'},
       {id:'l3-2',subject:'ريض 107 | المتجهات والمصفوفات',examName:'الاختبار الفصلي الاول',date:'2026-10-06',term:'first'},
       {id:'l3-3',subject:'فيز 103 | الفيزياء العامة',examName:'الاختبار الفصلي الاول',date:'2026-10-12',term:'first'},
-      {id:'l3-4',subject:'هعم 104 | الرسم الهندسي',examName:'',date:null,term:'first'},
+      {id:'l3-4',subject:'هعم 104 | الرسم الهندسي',examName:'الاختبار الفصلي الاول',date:'2026-10-10',term:'first'},
       {id:'l3-5',subject:'نجم 109 | اللغة والتخاطب',examName:'الاختبار الفصلي الاول',date:'2026-11-05',term:'first'}
     ];
   const LEVEL4 = [
       {id:'l4-1',subject:'ريض 203 | حساب التفاضل والتكامل',examName:'الاختبار الفصلي الاول',date:'2026-10-14',term:'first'},
       {id:'l4-2',subject:'فيز 104 | الفيزياء العامة (2)',examName:'الاختبار الفصلي الاول',date:'2026-10-05',term:'first'},
       {id:'l4-3',subject:'هعم 106 | تصميم هندسي',examName:'الاختبار الفصلي الاول',date:'2026-10-01',term:'first'},
-      {id:'l4-4',subject:'نجم 110 | الكتابة التقنية',examName:'الاختبار الفصلي الاول',date:'2026-10-05',term:'first'}
+      {id:'l4-4',subject:'نجم 110 | الكتابة التقنية',examName:'الاختبار الفصلي الاول',date:'2026-11-05',term:'first'}
     ];
 
   // قائمة الاختيارات داخل نموذج إضافة الموعد.
@@ -2519,16 +2519,28 @@
   if(deleteYesBtn){
     deleteYesBtn.addEventListener('click', function(){
       if(pendingDeleteAction === 'delete-all-upcoming'){
-        // حذف كل المواعيد/المواد المحفوظة الحالية، ثم استبدالها عند قبول رابط جديد.
-        exams = [];
-        starred = [];
-        notes = {};
+        // حذف القادم فقط، مع إبقاء المواعيد المنتهية كما هي.
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const isFutureOrToday = function(date){
+          if(!date) return false;
+          const d = new Date(date + 'T00:00:00');
+          return !isNaN(d.getTime()) && d >= today;
+        };
+        const removedExamIds = exams.filter(function(ex){ return isFutureOrToday(ex.date); }).map(function(ex){ return String(ex.id); });
+        exams = exams.filter(function(ex){ return !isFutureOrToday(ex.date); });
+        starred = starred.filter(function(id){
+          const item = LEVEL3.concat(LEVEL4).find(function(x){ return x.id === id; });
+          return !(item && isFutureOrToday(item.date));
+        });
+        removedExamIds.forEach(function(id){ delete notes[id]; });
         saveExams();
         saveStarred();
         saveNotes();
         closeDeleteModal();
         renderHomeNearUpcoming();
         if(currentView === 'upcoming') renderUpcoming();
+        if(currentView === 'expired') renderExpired();
         return;
       }
       if(pendingDeleteAction === 'delete-all-expired'){
