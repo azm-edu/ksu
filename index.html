@@ -1719,7 +1719,7 @@
       });
       saveExams(); saveStarred(); saveNotes();
       closeShareModal();
-      history.replaceState(null,'',window.location.pathname + window.location.search);
+      // لا نحذف #sharedAppointments؛ الباركود نفسه يجب أن يبقى رابط مشاركة صالحاً ويمكن استخدامه مرة أخرى.
       renderHomeNearUpcoming();
       if(currentView === 'upcoming') renderUpcoming();
       alert('تم نسخ المواعيد');
@@ -1727,13 +1727,19 @@
     if(yesBtn) yesBtn.onclick = accept;
     if(noBtn) noBtn.onclick = function(){
       closeShareModal();
-      history.replaceState(null,'',window.location.pathname + window.location.search);
     };
     document.querySelectorAll('[data-share-close]').forEach(function(el){
-      el.onclick = function(){ closeShareModal(); history.replaceState(null,'',window.location.pathname + window.location.search); };
+      el.onclick = function(){ closeShareModal(); };
     });
     openShareModal();
   }
+
+  // استقبال رابط المشاركة يعمل أيضاً إذا وصل الباركود بعد فتح الصفحة أو عاد المستخدم لنفس الرابط.
+  window.addEventListener('hashchange', function(){
+    if((window.location.hash || '').indexOf('#sharedAppointments=') === 0){
+      importSharedAppointments();
+    }
+  });
 
   function loadData(){
     exams = loadLocal(EXAMS_KEY, []);
