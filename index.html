@@ -210,7 +210,7 @@
   @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
   .upcoming-heading{align-items:center}
-  .upcoming-actions{display:flex;align-items:center;gap:8px;flex:none}
+  .upcoming-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:none}
   .share-my-dates{
     flex:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;
     min-height:38px;padding:0 11px;border:1px solid #DBEAFE;
@@ -387,6 +387,7 @@
   .form-grid.catalog-mode .specialty-search-toggle{color:#2563EB !important}
   @media (max-width:600px){
     .upcoming-heading{align-items:flex-start}
+    .upcoming-actions{display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:7px;flex:none}
     .expired-heading{align-items:flex-start}
     .share-my-dates{min-width:38px;width:38px;padding:0;border-radius:10px}
     .share-my-dates span{display:none}
@@ -1014,17 +1015,17 @@
             </div>
             <div class="upcoming-actions">
               <button class="share-my-dates" id="shareMyDatesBtn" type="button" title="مشاركة مواعيدي" aria-label="مشاركة مواعيدي">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="18" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/>
-                <circle cx="6" cy="12" r="2.5" stroke="currentColor" stroke-width="1.8"/>
-                <circle cx="18" cy="19" r="2.5" stroke="currentColor" stroke-width="1.8"/>
-                <path d="M8.3 10.8 15.7 6.2M8.3 13.2l7.4 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-              </svg>
-              <span>مشاركة مواعيدي</span>
-            </button>
-            <button class="delete-all-expired" id="deleteAllUpcomingBtn" type="button" title="حذف الكل" aria-label="حذف الكل">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span>حذف الكل</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="18" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+                  <circle cx="6" cy="12" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+                  <circle cx="18" cy="19" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M8.3 10.8 15.7 6.2M8.3 13.2l7.4 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                <span>مشاركة مواعيدي</span>
+              </button>
+              <button class="delete-all-expired" id="deleteAllUpcomingBtn" type="button" title="حذف الكل" aria-label="حذف الكل">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>حذف الكل</span>
               </button>
             </div>
           </div>
@@ -1593,16 +1594,9 @@
     const prefix = '#sharedAppointments=';
     if(hash.indexOf(prefix) !== 0) return;
 
-    // نفس الرابط على نفس المتصفح لا يُقبل مرة ثانية.
-    if(isShareLinkUsed(hash)){
-      alert('تم استخدام رابط المشاركة مسبقًا على هذا المتصفح.');
-      clearSharedHash();
-      return;
-    }
-
     const data = decodeShareData(hash.slice(prefix.length));
     if(!data || !Array.isArray(data.exams) || !Array.isArray(data.starred)){
-      clearSharedHash();
+      history.replaceState(null,'',window.location.pathname + window.location.search);
       return;
     }
 
@@ -1635,7 +1629,7 @@
       data.starred.forEach(function(id){
         if((LEVEL3.concat(LEVEL4).some(function(item){ return item.id === id; })) && starred.indexOf(id) === -1) starred.push(id);
       });
-      saveExams(); saveStarred();
+      saveExams(); saveStarred(); saveNotes();
       closeShareModal();
       history.replaceState(null,'',window.location.pathname + window.location.search);
       renderHomeNearUpcoming();
