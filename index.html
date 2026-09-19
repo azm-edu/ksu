@@ -7,7 +7,7 @@
 <title>مبادرة عزْم | كلية الهندسة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#f5f1e8;
@@ -66,7 +66,8 @@
       radial-gradient(circle at 90% 8%, rgba(24,43,73,.08), transparent 26%),
       var(--bg);
     color:var(--text);
-    font-family:"IBM Plex Sans Arabic","Tajawal","Segoe UI",Tahoma,Arial,sans-serif;
+    font-family:"Tajawal","Segoe UI",Tahoma,Arial,sans-serif;
+    font-weight:400;
     transition:background .25s ease,color .25s ease;
   }
   body.dark{background:
@@ -173,9 +174,10 @@
   }
   .hero h1{
     margin:0;
-    font-size:clamp(24px,4vw,38px);
-    line-height:1.25;
-    letter-spacing:-.5px;
+    font-size:clamp(28px,4.6vw,42px);
+    line-height:1.22;
+    letter-spacing:-.6px;
+    font-weight:800;
   }
   .hero p{
     margin:10px 0 0;
@@ -257,7 +259,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
   .code-input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
   .code-submit-btn{width:100%;height:42px;border:0;border-radius:11px;background:#2563eb;color:#fff;font:800 12px inherit;cursor:pointer}
   .my-share-code{margin:4px auto 14px;width:min(270px,100%);padding:18px 14px;border:1px solid var(--border);border-radius:16px;background:var(--surface-2);text-align:center;box-sizing:border-box}
-  .my-share-code-label{display:block;color:var(--text-dim);font-size:11.5px;font-weight:700;margin-bottom:8px}
+  .my-share-code-label{display:block;color:var(--text-dim);font-size:11.5px;font-weight:500;margin-bottom:8px}
   .my-share-code-value{display:block;color:#2563eb;font:900 30px/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;letter-spacing:5px;direction:ltr}
   .share-options-icon{background:#eff6ff;color:#2563eb}
   .share-image-preview-wrap{width:100%;max-height:min(48vh,520px);overflow:auto;margin:2px 0 16px;border:1px solid var(--border);border-radius:14px;background:var(--surface-2);padding:8px;box-sizing:border-box}
@@ -327,7 +329,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     display:block;
     color:var(--text-dim);
     font-size:12px;
-    font-weight:700;
+    font-weight:500;
     margin:0 0 7px;
   }
   input,select,textarea{
@@ -379,7 +381,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
   .course-option-item{padding:10px 11px;border-radius:9px;cursor:pointer;font-size:14px;line-height:1.5;color:var(--text);user-select:none}
   .course-option-item:hover,.course-option-item.active{background:var(--surface-2)}
   .course-option-empty{padding:12px;color:var(--text-faint);font-size:13px;text-align:center}
-  .course-search.is-selected{font-weight:600}
+  .course-search.is-selected{font-weight:500}
 
 
   /* إدخال الموعد: بالاسم فقط */
@@ -574,8 +576,8 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
   .card-v2:hover{border-color:var(--border-strong);box-shadow:var(--shadow-soft)}
   .cv2-head{position:relative;padding-left:28%;min-height:155px}
   .cv2-head .star-btn{position:absolute;left:0;top:0}
-  .cv2-title{font-size:16px;font-weight:900;line-height:1.5;color:var(--text);overflow-wrap:anywhere}
-  .cv2-examname{font-size:13px;font-weight:700;color:var(--text-dim);margin-top:6px;overflow-wrap:anywhere}
+  .cv2-title{font-size:16px;font-weight:800;line-height:1.5;color:var(--text);overflow-wrap:anywhere}
+  .cv2-examname{font-size:13px;font-weight:500;color:var(--text-dim);margin-top:6px;overflow-wrap:anywhere}
   .cv2-date{
     display:flex;align-items:center;justify-content:flex-start;gap:6px;
     margin-top:7px;margin-bottom:3px;font-size:12.5px;color:var(--text-faint);
@@ -588,7 +590,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
   .cv2-status .badge{display:inline-flex;align-items:center;justify-content:center;font-size:15px;padding:10px 14px;gap:10px;margin-top:0}
   .cv2-status .status-icon{width:24px;height:24px}
   .cv2-countdown-wrap{position:absolute;left:0;top:0;width:23%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1;transform:translateY(-3px);z-index:1;padding:10px 8px;box-sizing:border-box;background:color-mix(in srgb,var(--navy) 6%,var(--card));border:1px solid color-mix(in srgb,var(--navy) 14%,var(--border));border-radius:16px}
-  .cv2-countdown{display:block;font-size:82px;font-weight:900;color:var(--navy);line-height:.9;white-space:nowrap;letter-spacing:-1.5px}
+  .cv2-countdown{display:block;font-size:82px;font-weight:800;color:var(--navy);line-height:.9;white-space:nowrap;letter-spacing:-1.5px}
   .cv2-countdown-label{display:block;margin-top:10px;font-size:18px;font-weight:800;color:#000;line-height:1.2;white-space:nowrap}
   .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown{font-size:54px;letter-spacing:-1px}
   .cv2-countdown-wrap.cv2-countdown-100 .cv2-countdown-label{font-size:16px;margin-top:9px}
@@ -649,7 +651,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
   }
   .social-link:hover{color:var(--text);border-color:var(--border-strong);transform:translateY(-1px)}
   .social-link svg{width:17px;height:17px}
-  .telegram{color:#229ed9}
+  .x-social{color:#000}
   .linkedin{color:#0a66c2}
 
   .site-footer{
@@ -683,6 +685,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     color:var(--gold);
   }
   .footer-social svg{width:19px;height:19px}
+  .footer-social.x-social{color:#000}
   .footer-caption{
     margin-top:10px;
     color:var(--text-faint);
@@ -772,7 +775,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
   }
   .drawer-social:hover{transform:translateY(-6px);border-color:var(--gold);color:var(--gold)}
   .drawer-social svg{width:20px;height:20px}
-  .drawer-social.telegram{color:#229ed9}
+  .drawer-social.x-social{color:#000}
   .drawer-social.linkedin{color:#0a66c2}
   .nav-item{
     width:100%;text-align:right;
@@ -915,8 +918,8 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     </nav>
 
     <div class="drawer-socials" aria-label="روابط المبادرة">
-      <a class="drawer-social telegram" href="https://t.me/+jWEsoGgXZGhmNzI0" target="_blank" rel="noopener" aria-label="تيليجرام" title="تيليجرام">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.5 3.5 2.5 10.8c-1 .4-1 1.7.1 2l4.6 1.5 1.8 5.6c.3.9 1.4 1.1 2 .4l2.6-2.9 4.9 3.6c.9.6 2.1.1 2.4-.9l3.3-15.3c.3-1.2-.9-2.2-2.1-1.3Z" fill="currentColor"/></svg>
+      <a class="drawer-social x-social" href="https://x.com/azmksu?s=11" target="_blank" rel="noopener" aria-label="X" title="X">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26L22.827 21.75h-6.562l-5.13-6.693-5.87 6.693H1.956l7.73-8.835L1.5 2.25h6.728l4.637 6.127L18.244 2.25Zm-1.158 17.13h1.833L7.328 4.515H5.361L17.086 19.38Z"/></svg>
       </a>
       <a class="drawer-social linkedin" href="https://www.linkedin.com/company/azmksu/" target="_blank" rel="noopener" aria-label="لينكدن" title="لينكدن">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 8.4H2.1V21h3.1V8.4ZM3.65 3A1.82 1.82 0 1 0 3.65 6.64 1.82 1.82 0 0 0 3.65 3ZM21.9 13.8c0-3.8-2-5.57-4.67-5.57-2.15 0-3.1 1.18-3.63 2v-1.8h-3.1V21h3.1v-6.24c0-1.64.3-3.23 2.34-3.23 2 0 2.03 1.87 2.03 3.35V21H21.1l.8-7.2Z"/></svg>
@@ -1174,9 +1177,9 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
 
         <footer class="site-footer">
           <div class="footer-socials">
-            <a class="footer-social" href="https://t.me/+jWEsoGgXZGhmNzI0" target="_blank" rel="noopener" aria-label="تيليجرام" title="تيليجرام">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M21.5 3.5 2.5 10.8c-1 .4-1 1.7.1 2l4.6 1.5 1.8 5.6c.3.9 1.4 1.1 2 .4l2.6-2.9 4.9 3.6c.9.6 2.1.1 2.4-.9l3.3-15.3c.3-1.2-.9-2.2-2.1-1.3Z" fill="currentColor"/>
+            <a class="footer-social x-social" href="https://x.com/azmksu?s=11" target="_blank" rel="noopener" aria-label="X" title="X">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26L22.827 21.75h-6.562l-5.13-6.693-5.87 6.693H1.956l7.73-8.835L1.5 2.25h6.728l4.637 6.127L18.244 2.25Zm-1.158 17.13h1.833L7.328 4.515H5.361L17.086 19.38Z"/>
               </svg>
             </a>
             <a class="footer-social" href="https://www.linkedin.com/company/azmksu/" target="_blank" rel="noopener" aria-label="لينكدن" title="لينكدن">
