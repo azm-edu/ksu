@@ -1695,11 +1695,40 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
         try{
           const result=await window.azmSupabase.rpc('replace_appointments_by_code',{input_code:codeToUse});
           if(result.error) throw result.error;
-          await loadData(true);
+
+          // دالة الاستبدال تعيد المواعيد التي تم نسخها داخل نفس العملية.
+          // نعتمد على النتيجة مباشرة حتى لا يحصل حذف/إعادة حفظ محلي بعد النسخ.
+          const copiedRows = result.data && Array.isArray(result.data.appointments)
+            ? result.data.appointments : [];
+
+          exams=copiedRows.map(function(row){
+            return {
+              id:String(row.id),
+              subject:String(row.subject||''),
+              examName:String(row.exam_name||''),
+              isCustom:!!row.is_custom,
+              destination:String(row.destination||''),
+              date:row.exam_date ? String(row.exam_date) : ''
+            };
+          });
+
+          // النسخ يستبدل المواعيد، لذلك الملاحظات والمفضلة المرتبطة بالقائمة
+          // القديمة لا تبقى مرتبطة بمواعيد جديدة.
+          starred=[];
+          notes={};
+          saveLocal(EXAMS_KEY,exams);
+          saveLocal(STARRED_KEY,starred);
+          saveLocal(NOTES_KEY,notes);
+
           if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
           renderHomeNearUpcoming();
           if(currentView === 'upcoming') renderUpcoming();
-          alert('تم نسخ المواعيد بنجاح.');
+
+          const copiedCount=(result.data && Number.isFinite(Number(result.data.count)))
+            ? Number(result.data.count) : exams.length;
+          alert(copiedCount > 0
+            ? 'تم نسخ '+copiedCount+' موعد بنجاح.'
+            : 'تم النسخ، لكن صاحب الرمز لا يملك مواعيد حالياً.');
         }catch(err){
           console.error(err);
           alert(err && err.message ? err.message : 'تعذر نسخ المواعيد.');
