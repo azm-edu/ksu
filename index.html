@@ -1696,12 +1696,19 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
           const result=await window.azmSupabase.rpc('replace_appointments_by_code',{input_code:codeToUse});
           if(result.error) throw result.error;
 
-          // دالة الاستبدال تعيد المواعيد التي تم نسخها داخل نفس العملية.
-          // نعتمد على النتيجة مباشرة حتى لا يحصل حذف/إعادة حفظ محلي بعد النسخ.
-          const copiedRows = result.data && Array.isArray(result.data.appointments)
-            ? result.data.appointments : [];
+          // مهم: صاحب الرمز لا يتأثر. دالة الاستبدال تغيّر مواعيد
+          // المستخدم الحالي فقط. بعد نجاح العملية نقرأ مواعيد المستخدم
+          // الحالي من Supabase مباشرة، بدل الاعتماد على شكل نتيجة الـ RPC؛
+          // وهذا يعمل سواء كانت الدالة القديمة ترجع count فقط أو ترجع appointments.
+          const currentUid = window.azmSupabaseSession.user.id;
+          const {data: copiedRows, error: copiedRowsError} = await window.azmSupabase
+            .from('appointments')
+            .select('id,subject,exam_name,destination,exam_date,is_custom')
+            .eq('user_id', currentUid)
+            .order('exam_date', {ascending:true});
+          if(copiedRowsError) throw copiedRowsError;
 
-          exams=copiedRows.map(function(row){
+          exams=(copiedRows||[]).map(function(row){
             return {
               id:String(row.id),
               subject:String(row.subject||''),
