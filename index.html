@@ -1648,7 +1648,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     modal.setAttribute('aria-hidden','true');
   }
 
-  async async function copyMyShareCode(){
+  async function copyMyShareCode(){
     const code=getMyShareCode();
     try{ await navigator.clipboard.writeText(code); alert('تم نسخ رمز مواعيدك: '+code); }
     catch(e){ window.prompt('رمز مواعيدك:',code); }
