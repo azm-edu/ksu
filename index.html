@@ -850,6 +850,9 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     .card-v2.expired-card .cv2-head{min-height:108px}
     .cv2-btn{height:38px;font-size:11.5px}
   }
+
+.qr-share-preview{width:min(320px,100%);margin:10px auto 16px;padding:12px;border:1px solid var(--border);border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+.qr-share-preview canvas{display:block;width:280px;height:280px;max-width:100%;background:#fff;border-radius:10px}
 </style>
 
 <style id="code-input-polish">
@@ -1135,17 +1138,16 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 7h8M8 12h8M8 17h5M5 4h14v16H5z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h3 id="qrShareTitle">نسخ مواعيدي</h3>
-            <p class="share-code-hint">هذا هو رمزك الخاص لمشاركة مواعيدك</p>
-            <div class="my-share-code">
-              <span class="my-share-code-label">رمز المواعيد</span>
-              <span class="my-share-code-value" id="myShareCodeValue">FKO45</span>
+            <p class="share-code-hint">امسح الباركود لنسخ المواعيد</p>
+            <div class="qr-share-preview">
+              <canvas id="shareQrCanvas" width="300" height="300" aria-label="باركود نسخ المواعيد"></canvas>
             </div>
-            <button type="button" class="share-options-close" id="shareQrCodeBtn">نسخ الرمز</button>
+            <button type="button" class="share-options-close" id="shareQrCodeBtn">مشاركة الباركود</button>
             <button type="button" class="share-options-close" id="qrShareCloseBtn">تراجع</button>
           </div>
         </div>
 
-        <div class="share-modal" id="codeImportModal" aria-hidden="true">
+        <div class="share-modal" id="codeImportModal" aria-hidden="true" style="display:none">
           <div class="share-modal-backdrop" data-code-import-close></div>
           <div class="share-modal-box code-share-box" role="dialog" aria-modal="true" aria-labelledby="codeImportTitle">
             <div class="share-modal-icon share-options-icon">
@@ -1193,12 +1195,8 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     </div>
   </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-  const SUPABASE_URL = 'https://irwuoaoqsoyihifycrnn.supabase.co';
-  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_CGnrHkjbAJ995cySb328uw_Hv913wS9';
-  window.azmSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-  window.azmSupabaseSession = null;
 </script>
 <script>
   const EXAMS_KEY = 'azm-exams-list';
@@ -1629,30 +1627,8 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     }
   }
 
-  function getMyShareCode(){
-    if(window.azmMyShareCode && /^[A-Z0-9]{5}$/.test(window.azmMyShareCode)) return window.azmMyShareCode;
-    return '';
-  }
+  function getMyShareCode(){ return ''; }
 
-  function openMyShareCodeModal(){
-    const modal=document.getElementById('qrShareModal');
-    const value=document.getElementById('myShareCodeValue');
-    if(value) value.textContent=getMyShareCode();
-    if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
-  }
-
-  function closeQrShareModal(){
-    const modal=document.getElementById('qrShareModal');
-    if(!modal) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden','true');
-  }
-
-  async function copyMyShareCode(){
-    const code=getMyShareCode();
-    try{ await navigator.clipboard.writeText(code); alert('تم نسخ رمز مواعيدك: '+code); }
-    catch(e){ window.prompt('رمز مواعيدك:',code); }
-  }
 
   function openCodeImportModal(){
     const modal=document.getElementById('codeImportModal');
@@ -1666,86 +1642,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
   }
   async function submitAppointmentCode(){
-    const input=document.getElementById('appointmentCodeInput');
-    const code=(input?input.value:'').trim().toUpperCase();
-    if(!/^[A-Z0-9]{5}$/.test(code)){ alert('أدخل رمزاً صحيحاً مكوّناً من 5 أحرف أو أرقام.'); return; }
-    if(!window.azmSupabaseSession){ alert('تعذر الاتصال بالخدمة الآن. حاول مرة أخرى.'); return; }
-    try{
-      const {data,error}=await window.azmSupabase.rpc('check_share_code',{input_code:code});
-      if(error) throw error;
-      if(!data || !data.valid){
-        alert(data && data.same_user ? 'لا يمكنك نسخ مواعيدك بنفسك.' : 'الرمز غير صحيح.');
-        return;
-      }
-      window.pendingAppointmentCode=code;
-      closeCodeImportModal();
-      const modal=document.getElementById('shareModal');
-      const title=document.getElementById('shareModalTitle');
-      const text=modal ? modal.querySelector('.share-modal-box p') : null;
-      const yes=document.getElementById('shareYesBtn');
-      const no=document.getElementById('shareNoBtn');
-      if(title) title.textContent='هل تريد تأكيد نسخ المواعيد ؟';
-      if(text) text.textContent='سيتم استبدال مواعيدك الحالية بالكامل بمواعيد صاحب الرمز.';
-      if(yes) yes.textContent='نعم';
-      if(no) no.textContent='تراجع';
-      if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
-      if(yes) yes.onclick=async function(){
-        const codeToUse=window.pendingAppointmentCode;
-        window.pendingAppointmentCode=null;
-        try{
-          const result=await window.azmSupabase.rpc('replace_appointments_by_code',{input_code:codeToUse});
-          if(result.error) throw result.error;
-
-          // مهم: صاحب الرمز لا يتأثر. دالة الاستبدال تغيّر مواعيد
-          // المستخدم الحالي فقط. بعد نجاح العملية نقرأ مواعيد المستخدم
-          // الحالي من Supabase مباشرة، بدل الاعتماد على شكل نتيجة الـ RPC؛
-          // وهذا يعمل سواء كانت الدالة القديمة ترجع count فقط أو ترجع appointments.
-          const currentUid = window.azmSupabaseSession.user.id;
-          const {data: copiedRows, error: copiedRowsError} = await window.azmSupabase
-            .from('appointments')
-            .select('id,subject,exam_name,destination,exam_date,is_custom')
-            .eq('user_id', currentUid)
-            .order('exam_date', {ascending:true});
-          if(copiedRowsError) throw copiedRowsError;
-
-          exams=(copiedRows||[]).map(function(row){
-            return {
-              id:String(row.id),
-              subject:String(row.subject||''),
-              examName:String(row.exam_name||''),
-              isCustom:!!row.is_custom,
-              destination:String(row.destination||''),
-              date:row.exam_date ? String(row.exam_date) : ''
-            };
-          });
-
-          // النسخ يستبدل المواعيد، لذلك الملاحظات والمفضلة المرتبطة بالقائمة
-          // القديمة لا تبقى مرتبطة بمواعيد جديدة.
-          starred=[];
-          notes={};
-          saveLocal(EXAMS_KEY,exams);
-          saveLocal(STARRED_KEY,starred);
-          saveLocal(NOTES_KEY,notes);
-
-          if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
-          renderHomeNearUpcoming();
-          if(currentView === 'upcoming') renderUpcoming();
-
-          const copiedCount=(result.data && Number.isFinite(Number(result.data.count)))
-            ? Number(result.data.count) : exams.length;
-          alert(copiedCount > 0
-            ? 'تم نسخ '+copiedCount+' موعد بنجاح.'
-            : 'تم النسخ، لكن صاحب الرمز لا يملك مواعيد حالياً.');
-        }catch(err){
-          console.error(err);
-          alert(err && err.message ? err.message : 'تعذر نسخ المواعيد.');
-        }
-      };
-      if(no) no.onclick=function(){ window.pendingAppointmentCode=null; if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } };
-    }catch(err){
-      console.error(err);
-      alert('تعذر التحقق من الرمز الآن.');
-    }
+    alert('استخدم باركود المواعيد للمشاركة. افتح كاميرا الجوال وامسح الباركود المرسل لك.');
   }
 
   async function shareMyDates(){
@@ -1756,79 +1653,53 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
 
   function openQrShareModal(){
     const link = makeShareLink();
-    if(!link){ alert('تعذر إنشاء رابط نسخ المواعيد.'); return; }
+    if(!link){ alert('تعذر إنشاء باركود نسخ المواعيد.'); return; }
     const modal = document.getElementById('qrShareModal');
     const canvas = document.getElementById('shareQrCanvas');
     if(!modal || !canvas) return;
-
     modal.classList.add('open');
     modal.setAttribute('aria-hidden','false');
 
-    // إنشاء الباركود كصورة مباشرة، بدون الاعتماد على مكتبة خارجية.
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = function(){
-      const size = 300;
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, size, size);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, size, size);
-      ctx.drawImage(img, 20, 20, 260, 260);
+      const size=300;
+      canvas.width=size; canvas.height=size;
+      const ctx=canvas.getContext('2d');
+      ctx.fillStyle='#fff'; ctx.fillRect(0,0,size,size);
+      ctx.drawImage(img,0,0,size,size);
     };
-    img.onerror = function(){
-      alert('تعذر إنشاء الباركود الآن. تأكد من اتصالك بالإنترنت ثم حاول مرة أخرى.');
-    };
-    img.src = 'https://quickchart.io/qr?text=' + encodeURIComponent(link) + '&size=300&margin=1&ecLevel=M';
+    img.onerror=function(){ alert('تعذر إنشاء الباركود الآن.'); };
+    img.src='https://quickchart.io/qr?text='+encodeURIComponent(link)+'&size=300&margin=1&ecLevel=M';
   }
 
   function closeQrShareModal(){
-    const modal = document.getElementById('qrShareModal');
+    const modal=document.getElementById('qrShareModal');
     if(!modal) return;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden','true');
   }
 
-  async function copyShareLinkOnly(){
-    const link = makeShareLink();
-    if(!link){ alert('تعذر إنشاء رابط نسخ المواعيد.'); return; }
-    let copied = false;
-    try{
-      if(navigator.clipboard && window.isSecureContext){
-        await navigator.clipboard.writeText(link);
-        copied = true;
-      }
-    }catch(e){}
-    if(!copied) copied = copyTextFallback(link);
-    if(copied) alert('تم نسخ رابط مواعيدك.');
-    else window.prompt('رابط مواعيدك:', link);
-  }
-
   async function shareQrCodeImage(){
-    const canvas = document.getElementById('shareQrCanvas');
+    const canvas=document.getElementById('shareQrCanvas');
     if(!canvas){ alert('تعذر تجهيز الباركود.'); return; }
     try{
-      const blob = await new Promise(function(resolve){ canvas.toBlob(resolve, 'image/png'); });
-      if(!blob){ throw new Error('blob'); }
-      const file = new File([blob], 'dates.png', {type:'image/png'});
+      const blob=await new Promise(function(resolve){canvas.toBlob(resolve,'image/png');});
+      if(!blob) throw new Error('blob');
+      const file=new File([blob],'dates-qr.png',{type:'image/png'});
       if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
-        await navigator.share({
-          title:'نسخ مواعيدي',
-          text:'باركود نسخ المواعيد',
-          files:[file]
-        });
+        await navigator.share({title:'نسخ مواعيدي',text:'باركود نسخ المواعيد',files:[file]});
         return;
       }
-      alert('المشاركة بالباركود غير متاحة على هذا الجهاز.');
-    }catch(e){
-      if(e && e.name === 'AbortError') return;
-      alert('تعذر مشاركة الباركود على هذا الجهاز.');
-    }
+      const a=document.createElement('a');
+      a.download='باركود-مواعيدي.png';
+      a.href=canvas.toDataURL('image/png');
+      document.body.appendChild(a); a.click(); a.remove();
+    }catch(e){ if(e && e.name!=='AbortError') alert('تعذر مشاركة الباركود.'); }
   }
 
   async function shareAppointmentsLink(){
-    openMyShareCodeModal();
+    openQrShareModal();
   }
 
   function makeImportedId(index){
@@ -1899,77 +1770,15 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
     }
   });
 
-  async function loadData(skipLocalFallback){
-    try{
-      const {data:{session}}=await window.azmSupabase.auth.getSession();
-      let activeSession=session;
-      if(!activeSession){
-        const {data,error}=await window.azmSupabase.auth.signInAnonymously();
-        if(error) throw error;
-        activeSession=data.session;
-      }
-      window.azmSupabaseSession=activeSession;
-
-      const {data:profile,error:profileError}=await window.azmSupabase
-        .from('profiles').select('share_code').eq('user_id',activeSession.user.id).single();
-      if(profileError) throw profileError;
-      window.azmMyShareCode=profile.share_code;
-
-      const {data:rows,error:rowsError}=await window.azmSupabase
-        .from('appointments')
-        .select('id,subject,exam_name,destination,exam_date,is_custom')
-        .eq('user_id',activeSession.user.id)
-        .order('exam_date',{ascending:true});
-      if(rowsError) throw rowsError;
-      exams=(rows||[]).map(function(row){
-        return {
-          id:String(row.id),
-          subject:String(row.subject||''),
-          examName:String(row.exam_name||''),
-          isCustom:!!row.is_custom,
-          destination:String(row.destination||''),
-          date:row.exam_date ? String(row.exam_date) : ''
-        };
-      });
-      saveLocal(EXAMS_KEY,exams);
-      cleanupExpiredAppointments();
-    }catch(err){
-      console.error('Supabase load failed:',err);
-      exams=loadLocal(EXAMS_KEY,[]);
-      starred=loadLocal(STARRED_KEY,[]);
-      notes=loadLocal(NOTES_KEY,{});
-      if(!skipLocalFallback) alert('تعذر الاتصال بقاعدة البيانات، تم تشغيل المواعيد المحفوظة على الجهاز مؤقتاً.');
-    }
+  async function loadData(){
+    exams=loadLocal(EXAMS_KEY,[]);
     starred=loadLocal(STARRED_KEY,[]);
     notes=loadLocal(NOTES_KEY,{});
+    cleanupExpiredAppointments();
   }
 
   async function saveExams(){
     saveLocal(EXAMS_KEY,exams);
-    if(!window.azmSupabaseSession) return;
-    try{
-      const uid=window.azmSupabaseSession.user.id;
-      const {error:delError}=await window.azmSupabase.from('appointments').delete().eq('user_id',uid);
-      if(delError) throw delError;
-      if(exams.length){
-        const rows=exams.map(function(ex){
-          return {
-            user_id:uid,
-            subject:String(ex.subject||''),
-            exam_name:String(ex.examName||''),
-            destination:String(ex.destination||''),
-            exam_date:ex.date || null,
-            is_custom:!!ex.isCustom
-          };
-        });
-        const {data,error:insertError}=await window.azmSupabase.from('appointments').insert(rows).select('id,subject,exam_name,destination,exam_date,is_custom');
-        if(insertError) throw insertError;
-        exams=(data||[]).map(function(row){
-          return {id:String(row.id),subject:String(row.subject||''),examName:String(row.exam_name||''),isCustom:!!row.is_custom,destination:String(row.destination||''),date:row.exam_date?String(row.exam_date):''};
-        });
-        saveLocal(EXAMS_KEY,exams);
-      }
-    }catch(err){ console.error('Supabase save failed:',err); }
   }
 
   function saveStarred(){ saveLocal(STARRED_KEY, starred); }
@@ -2882,7 +2691,7 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
 const qrCloseBtn = document.getElementById('qrShareCloseBtn');
 if(qrCloseBtn) qrCloseBtn.addEventListener('click', closeQrShareModal);
 const shareQrCodeBtn = document.getElementById('shareQrCodeBtn');
-if(shareQrCodeBtn) shareQrCodeBtn.addEventListener('click', copyMyShareCode);
+if(shareQrCodeBtn) shareQrCodeBtn.addEventListener('click', shareQrCodeImage);
 document.querySelectorAll('[data-qr-close]').forEach(function(el){ el.addEventListener('click', closeQrShareModal); });
 const addByCodeBtn=document.getElementById('addByCodeBtn');
 if(addByCodeBtn) addByCodeBtn.addEventListener('click', openCodeImportModal);
