@@ -1703,6 +1703,57 @@ html{scrollbar-gutter:stable}
 @media(min-width:601px) and (max-width:970px){.desktop-nav{gap:2px}.desktop-nav .nav-item{font-size:11px;padding:8px 6px}.topbar-inner{gap:9px}.brand-home img{width:55px}.quick-links{gap:12px}}
 @media(max-width:600px){.quick-links{grid-template-columns:1fr}.quick-links .quick-link{min-height:83px;flex-wrap:nowrap;align-content:center}.quick-links .quick-link>span:nth-child(2){flex-basis:auto}.quick-links .quick-arrow{display:block}}
 @media(max-width:420px){.desktop-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.desktop-nav .nav-item{min-height:48px}.quick-links .quick-link{min-height:78px}}
+/* Compact mobile navigation and a seven-day, no-horizontal-scroll calendar. */
+.study-calendar-event-code{display:none}
+#azmAccountButton[hidden]{display:none}
+@media(max-width:600px){
+  .topbar{top:6px;width:calc(100% - 12px);margin-top:6px;padding:5px 8px;border-radius:18px}
+  .topbar-inner{display:flex;flex-wrap:nowrap;justify-content:space-between;gap:3px}
+  .brand-home{flex:0 0 30px;width:30px;height:34px}
+  .brand-home img{width:30px;height:30px}
+  .brand-home span{display:none}
+  .desktop-nav{order:0;display:flex;flex:1 1 auto;width:auto;min-width:0;gap:0;padding:0;border:0;justify-content:space-evenly}
+  .desktop-nav .nav-item{position:relative;display:grid;place-items:center;flex:0 0 34px;width:34px;min-height:34px;padding:5px;border-radius:10px}
+  .desktop-nav .nav-item svg{width:16px;height:16px}
+  .desktop-nav .nav-item span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .top-actions{display:flex;flex:0 0 auto;flex-wrap:nowrap;gap:1px;margin:0}
+  .top-action{flex:0 0 30px;width:30px;height:34px;min-height:34px}
+  .top-action svg{width:16px;height:16px}
+  .hero{padding-top:44px;text-align:center}
+  .hero h1{font-size:clamp(22px,6vw,27px);line-height:1.5;text-align:center;margin-inline:auto}
+  #view-about .about-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  #view-about .about-stat{min-width:0;padding:8px 2px;border-top:0;border-inline-start:1px solid var(--border)}
+  #view-about .about-stat:first-child{border:0}
+  #view-about .about-stat strong{font-size:clamp(16px,4.4vw,21px);line-height:1.25;letter-spacing:-.04em;white-space:nowrap}
+  #view-about .about-stat h3{font-size:10px;line-height:1.5;margin:7px 0 3px}
+  #view-about .about-stat p{font-size:10px;line-height:1.4}
+  .study-course-code{display:inline-flex;align-items:center;justify-content:center;max-width:100%;min-height:30px;margin-top:12px;padding:4px 9px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface-2);direction:ltr;unicode-bidi:isolate;font-size:12px;line-height:1.4;letter-spacing:.02em;text-align:center;overflow-wrap:anywhere}
+  .study-course-card h3{margin-top:10px}
+  .cv2-actions,.cv2-actions.has-cal,.cv2-actions.no-cal{display:flex;flex-wrap:nowrap;align-items:stretch;gap:4px}
+  .cv2-actions .cv2-btn{flex:0 0 34px;min-width:0;min-height:38px;height:auto;padding:5px 3px;gap:3px;font-size:10px;line-height:1.2}
+  .cv2-actions .cv2-calendar{flex:1.25 1 0}
+  .cv2-actions .cv2-btn[data-action="note"]{flex:1 1 0}
+  .cv2-actions .cv2-star{flex-basis:28px}
+  .cv2-actions .cv2-btn span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;text-align:center;line-height:1.2}
+  .cv2-actions .cv2-btn svg{width:13px;height:13px}
+  .study-calendar-scroll{overflow-x:hidden;scrollbar-gutter:auto}
+  .study-calendar-grid{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
+  .study-calendar-grid th{height:32px;padding:0 1px;border:0;background:transparent;font-size:10px}
+  .study-calendar-grid td{width:14.285%;border:0;border-bottom:1px solid var(--border)}
+  .study-calendar-day{min-height:78px;padding:4px 2px;gap:3px}
+  .study-calendar-day-number{align-self:center;width:100%;min-width:0;min-height:43px;padding:0;border-radius:0;gap:0;background:transparent;font-size:13px}
+  .study-calendar-day-number>span:first-child{display:grid;place-items:center;width:28px;height:28px;border-radius:50%}
+  .study-calendar-day-number[aria-current="date"]{background:transparent;color:var(--text)}
+  .study-calendar-day-number[aria-current="date"]>span:first-child{background:var(--gold);color:var(--surface)}
+  .study-calendar-selected{box-shadow:none}
+  .study-calendar-selected .study-calendar-day-number>span:first-child{outline:2px solid var(--gold);outline-offset:2px}
+  .study-calendar-hijri-day{font-size:8px;line-height:1.2;white-space:nowrap}
+  .study-calendar-events{gap:2px}
+  .study-calendar-event{min-height:20px;padding:3px 1px;border:0;border-radius:5px;align-items:center;justify-content:center;text-align:center}
+  .study-calendar-event-code{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(8px,2.3vw,10px);font-weight:800;line-height:1.2;unicode-bidi:isolate}
+  .study-calendar-event-title,.study-calendar-event small,.study-calendar-event time{display:none}
+  .study-calendar-swipe{display:none}
+}
 </style>
 </head>
 <body>
@@ -1713,7 +1764,7 @@ html{scrollbar-gutter:stable}
       </button>
       <nav class="desktop-nav" aria-label="التنقل السريع"><button type="button" class="nav-item active" data-view="add"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>إضافة مقررات</span></button><button type="button" class="nav-item" data-view="upcoming"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3v4m8-4v4M4 10h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1ZM8 14h2m4 0h2m-8 3h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>مواعيدي</span></button><button type="button" class="nav-item" data-view="gpa"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h12v18H6zM9 7h6m-6 4h1m4 0h1m-6 4h1m4 0h1m-6 3h1m4 0h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>حاسبة المعدل</span></button><button type="button" class="nav-item" data-view="courses"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5c4-1 6 0 9 2 3-2 5-3 9-2v14c-4-1-6 0-9 2-3-2-5-3-9-2ZM12 7v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>المقررات الدراسية</span></button></nav>
       <div class="top-actions">
-        <button class="top-action" id="azmAccountButton" type="button" data-view="account" aria-label="تسجيل الدخول أو إنشاء حساب" title="تسجيل الدخول"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></button>
+        <button class="top-action" id="azmAccountButton" type="button" data-view="account" aria-label="حسابي" title="حسابي" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></button>
         <button class="top-action" id="themeBtn" type="button" aria-label="تغيير الوضع" title="تغيير الوضع">
           <svg id="themeIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"></svg>
         </button>
@@ -1861,7 +1912,6 @@ html{scrollbar-gutter:stable}
             <button class="add-btn" id="addBtn" type="button">إضافة موعد</button>
           </div>
 
-<div class="quick-links" aria-label="خدمات المبادرة"><button type="button" class="nav-item quick-link" data-view="upcoming"><span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3v4m8-4v4M4 10h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1ZM8 14h2m4 0h2m-8 3h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>المواعيد القادمة</strong><small>تابع اختباراتك وشارك مواعيدك.</small></span><span class="quick-arrow" aria-hidden="true">←</span></button><button type="button" class="nav-item quick-link" data-view="gpa"><span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h12v18H6zM9 7h6m-6 4h1m4 0h1m-6 4h1m4 0h1m-6 3h1m4 0h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>حاسبة المعدل</strong><small>احسب معدلك الفصلي والتراكمي.</small></span><span class="quick-arrow" aria-hidden="true">←</span></button><button type="button" class="nav-item quick-link" data-view="courses"><span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3v4m8-4v4M4 10h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1ZM8 14h2m4 0h2m-8 3h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>المقررات الدراسية</strong><small>تابع مقررات فصلك ومواعيدها.</small></span><span class="quick-arrow" aria-hidden="true">←</span></button></div>
           <section class="section home-near-section" id="homeNearSection">
             <div class="section-header">
               <h3 class="section-title">المواعيد القادمة قريباً</h3>
@@ -4418,11 +4468,6 @@ window.AzmCatalog = (() => {
     const x=finalFor(c);
     return x?(x.status==='cancelled'?'النهائي: ملغى':x.status==='scheduled'?'النهائي: '+formatDateArabic(x.exam_date):'النهائي: لم يُحدد بعد'):'النهائي: لم يُعلن بعد';
   }
-  function finalNotice(){
-    if(finalsState==='loading')return 'جارٍ تحديث الاختبارات النهائية…';
-    if(finalsState==='error'||finalsState==='cached')return 'تعذّر تحديث النهائيات أو لم يتم التحقق منها الآن. '+(finalsCheckedAt?'تُعرض آخر بيانات محفوظة؛ آخر اتصال ناجح: '+new Date(finalsCheckedAt).toLocaleString('ar-SA',{timeZone:'Asia/Riyadh'})+'.':'حاول التحديث عند توفر الاتصال.');
-    return finalsCheckedAt?'تُحدَّث النهائيات من بيانات الجامعة المتاحة في الموقع. آخر اتصال بالقاعدة: '+new Date(finalsCheckedAt).toLocaleString('ar-SA',{timeZone:'Asia/Riyadh'})+'.':'سيظهر النهائي تلقائيًا بعد نشره للمقرر في قاعدة البيانات.';
-  }
   function publishFinals(){window.azmUniversityFinals=courses.flatMap(finalItems);}
   async function syncFinals(){
     const request=++finalRequest,ids=courses.map(c=>c.id),term=activeTermId;
@@ -4612,7 +4657,7 @@ window.AzmCatalog = (() => {
     list=list.filter(x=>(type==='all'||category(x)===type)&&(period==='all'||(period==='past'?dayDiff(x.date)<0:dayDiff(x.date)>=0))).sort(sortByDate);
     const el=$('studyCourseDatesList');
     const markup=list.length?list.map(x=>cardMarkup(x,false,dayDiff(x.date)<0,x.type==='starred')).join(''):empty('لا توجد مواعيد لهذا المقرر',c?'أضف أول اختبار أو موعد للمقرر.':'ستظهر هنا مواعيد المقرر الذي تختاره، بنفس تنسيق المواعيد القادمة.');
-    window.AzmUi.update(el,markup+'<div class="study-final-info">'+symbol(calendar)+'<span>'+esc(finalNotice())+'</span></div>');
+    window.AzmUi.update(el,markup);
     bindCardActions(el);
   }
   function openDialog(id){const d=$(id);if(!d.open)d.showModal();}
@@ -4692,6 +4737,11 @@ window.AzmCatalog = (() => {
     const time=String(value||'');
     return /^(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(time)?time.slice(0,5):'';
   }
+  function calendarCourseCode(item){
+    const linked=courseFor(filterKey(item));
+    const code=linked?.code||String(item.subject||'').split('|')[0].trim();
+    return code||item.examName||'موعد';
+  }
   function calendarMonthDays(month){
     const first=new Date(month+'-01T12:00:00Z');
     const year=first.getUTCFullYear(),index=first.getUTCMonth(),offset=first.getUTCDay();
@@ -4701,7 +4751,7 @@ window.AzmCatalog = (() => {
   function calendarEventMarkup(item){
     const time=calendarTime(item.time);
     const label=[item.subject,item.examName,calendarDateLabel(item.date),hijriDateLabel(item.date),time?'الوقت '+time+' بتوقيت الرياض':''].filter(Boolean).join('، ');
-    return '<button type="button" class="study-calendar-event'+(category(item)==='final'?' is-final':'')+'" data-calendar-date="'+esc(item.date)+'" data-calendar-event="'+esc(item.id)+'" title="'+esc(label)+'" aria-label="'+esc(label)+'"><span class="study-calendar-event-title">'+esc(item.subject)+'</span>'+(item.examName?'<small>'+esc(item.examName)+'</small>':'')+(time?'<time datetime="'+time+'">'+time+'</time>':'')+'</button>';
+    return '<button type="button" class="study-calendar-event'+(category(item)==='final'?' is-final':'')+'" data-calendar-date="'+esc(item.date)+'" data-calendar-event="'+esc(item.id)+'" title="'+esc(label)+'" aria-label="'+esc(label)+'"><span class="study-calendar-event-code" dir="auto">'+esc(calendarCourseCode(item))+'</span><span class="study-calendar-event-title">'+esc(item.subject)+'</span>'+(item.examName?'<small>'+esc(item.examName)+'</small>':'')+(time?'<time datetime="'+time+'">'+time+'</time>':'')+'</button>';
   }
   function renderCalendarDetails(items){
     const details=$('studyCalendarDetails');
@@ -4856,8 +4906,7 @@ window.AzmCatalog = (() => {
     $('azmMemberName').textContent=name;
     $('azmMemberEmail').textContent=session?.user?.email||'';
     $('azmAccountNav').textContent=logged?'حسابي':'تسجيل الدخول / إنشاء حساب';
-    $('azmAccountButton').setAttribute('aria-label',logged?'حسابي':'تسجيل الدخول / إنشاء حساب');
-    $('azmAccountButton').setAttribute('title',logged?'حسابي':'تسجيل الدخول / إنشاء حساب');
+    $('azmAccountButton').hidden=!logged;
     $('azmSyncStatus').textContent=syncText;
   }
   function status(text){syncText=text;paint();}
