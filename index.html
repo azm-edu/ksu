@@ -1746,9 +1746,14 @@ html{scrollbar-gutter:stable}
   .desktop-nav .nav-item span{font-size:13px;line-height:1.6}
 }
 @media(max-width:600px){
-
-
-
+  .hero{padding:32px 0 26px;text-align:center}
+  .hero h1{font-size:clamp(21px,6.1vw,30px);line-height:1.6;white-space:nowrap;text-wrap:nowrap;overflow-wrap:normal}
+  .hero p{font-size:clamp(11px,3.1vw,14px);line-height:1.9;margin:8px auto 0;text-align:center;text-wrap:balance}
+  .study-enrollment{padding:22px 16px}
+  .study-steps{flex-wrap:nowrap;justify-content:space-between;gap:6px;padding:15px 0;font-size:clamp(10px,2.65vw,12px)}
+  .study-steps li{flex:0 0 auto;gap:4px;white-space:nowrap}
+  .study-steps .study-step-number{width:20px;height:20px;font-size:10px}
+  .study-step-label{white-space:nowrap}
   .cv2-head{--countdown-size:96px;grid-template-columns:minmax(0,1fr) var(--countdown-size)}
   .cv2-countdown-wrap{width:var(--countdown-size);max-width:var(--countdown-size);height:var(--countdown-size);min-height:0;aspect-ratio:1;align-self:center}
   #view-about .about-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
@@ -1776,12 +1781,15 @@ html{scrollbar-gutter:stable}
   .study-calendar-grid th{height:32px;padding:0 1px;border:0;background:transparent;font-size:10px}
   .study-calendar-grid td{width:14.285%;border:0;border-bottom:1px solid var(--border)}
   .study-calendar-day{min-height:78px;padding:4px 2px;gap:3px}
-  .study-calendar-day-number{align-self:center;width:100%;min-width:0;min-height:43px;padding:0;border-radius:0;gap:0;background:transparent;font-size:13px}
-  .study-calendar-day-number>span:first-child{display:grid;place-items:center;width:28px;height:28px;border-radius:50%}
+  .study-calendar-day-number{align-self:center;width:100%;min-width:0;min-height:46px;padding:0;border-radius:0;gap:4px;background:transparent;font-size:13px;-webkit-tap-highlight-color:transparent}
+  .study-calendar-day-number>span:first-child{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%}
+  .study-calendar-day-number:hover{background:transparent}
+  .study-calendar-day-number:focus-visible{outline:none}
+  .study-calendar-day-number:focus-visible>span:first-child{outline:2px dashed var(--text);outline-offset:-2px}
   .study-calendar-day-number[aria-current="date"]{background:transparent;color:var(--text)}
   .study-calendar-day-number[aria-current="date"]>span:first-child{background:var(--gold);color:var(--surface)}
   .study-calendar-selected{box-shadow:none}
-  .study-calendar-selected .study-calendar-day-number>span:first-child{outline:2px solid var(--gold);outline-offset:2px}
+  .study-calendar-selected .study-calendar-day-number>span:first-child{box-shadow:inset 0 0 0 2px var(--gold)}
   .study-calendar-hijri-day{font-size:8px;line-height:1.2;white-space:nowrap}
   .study-calendar-events{gap:2px}
   .study-calendar-event{min-height:20px;padding:3px 1px;border:0;border-radius:5px;align-items:center;justify-content:center;text-align:center}
@@ -1810,6 +1818,7 @@ html{scrollbar-gutter:stable}
 .study-enroll-bottom>div{min-width:0;overflow-wrap:anywhere}
 .study-enroll-bottom>.study-primary{flex-shrink:0}
 .study-course-top .study-symbol{flex:none}
+.study-course-identity{display:flex;flex-direction:column;align-items:flex-start;min-width:0;max-width:65%}
 .study-preview-tag{min-width:0;white-space:normal;line-height:1.7;text-align:center}
 .study-course-code,.study-course-card p,.study-course-meta>span{min-width:0;overflow-wrap:anywhere}
 .study-course-code{unicode-bidi:isolate}
@@ -1827,11 +1836,8 @@ html{scrollbar-gutter:stable}
 }
 
 @media(max-width:600px){
-
-
-
-
-
+  .study-course-identity{align-items:center;gap:4px}
+  .study-course-identity .study-course-code{width:100%;text-align:center}
   .study-share-grid{grid-template-columns:minmax(0,1fr)}
 }
 </style>
@@ -4724,7 +4730,7 @@ window.AzmCatalog = (() => {
   }
   function courseCard(c){
     const id=c?c.id:'preview',num=c?allAppointments().filter(x=>isLinked(x,id)).length:0;
-    return '<article class="study-course-card'+(!c?' study-preview':'')+'"><div class="study-course-top">'+symbol(book)+'<span class="study-preview-tag">'+(c?'مقرر مضاف':'معاينة التصميم')+'</span></div><div class="study-course-code" dir="auto">'+(c?esc(c.code):'رمز المقرر')+'</div><h3>'+(c?esc(c.name):'اسم المقرر')+'</h3><p>'+(c?esc(c.majorName||''):'الكلية · التخصص')+'</p><div class="study-course-meta"><span>'+num+' مواعيد قادمة</span><span>'+esc(c?finalLabel(c):'النهائي: لم يُعلن بعد')+'</span></div><div class="study-course-actions"><button class="study-secondary" data-course-action="dates" data-course-id="'+esc(id)+'" type="button">مواعيد المقرر</button><button class="study-primary" data-course-action="add" data-course-id="'+esc(id)+'" type="button">+ إضافة موعد</button></div><div class="study-card-tools"><button type="button" data-course-action="delete" data-course-id="'+esc(id)+'">حذف المقرر</button></div></article>';
+    return '<article class="study-course-card'+(!c?' study-preview':'')+'"><div class="study-course-top"><div class="study-course-identity">'+symbol(book)+'<div class="study-course-code" dir="auto">'+(c?esc(c.code):'رمز المقرر')+'</div></div><span class="study-preview-tag">'+(c?'مقرر مضاف':'معاينة التصميم')+'</span></div><h3>'+(c?esc(c.name):'اسم المقرر')+'</h3><p>'+(c?esc(c.majorName||''):'الكلية · التخصص')+'</p><div class="study-course-meta"><span>'+num+' مواعيد قادمة</span><span>'+esc(c?finalLabel(c):'النهائي: لم يُعلن بعد')+'</span></div><div class="study-course-actions"><button class="study-secondary" data-course-action="dates" data-course-id="'+esc(id)+'" type="button">مواعيد المقرر</button><button class="study-primary" data-course-action="add" data-course-id="'+esc(id)+'" type="button">+ إضافة موعد</button></div><div class="study-card-tools"><button type="button" data-course-action="delete" data-course-id="'+esc(id)+'">حذف المقرر</button></div></article>';
   }
   function renderCourseDates(){
     const c=courseFor(currentCourseId);
