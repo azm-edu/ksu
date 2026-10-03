@@ -1755,7 +1755,7 @@ html{scrollbar-gutter:stable}
   .study-steps .study-step-number{width:20px;height:20px;font-size:10px}
   .study-step-label{white-space:nowrap}
   .cv2-head{--countdown-size:96px;grid-template-columns:minmax(0,1fr) var(--countdown-size)}
-  .cv2-countdown-wrap{width:var(--countdown-size);max-width:var(--countdown-size);height:var(--countdown-size);min-height:0;aspect-ratio:1;align-self:center}
+  .cv2-countdown-wrap{width:var(--countdown-size);max-width:var(--countdown-size);height:calc(var(--countdown-size) - 8px);min-height:0;aspect-ratio:auto;align-self:center;padding:3px 8px}
   #view-about .about-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
   #view-about .about-stat{min-width:0;padding:8px 2px;border-top:0;border-inline-start:1px solid var(--border)}
   #view-about .about-stat:first-child{border:0}
@@ -1799,7 +1799,7 @@ html{scrollbar-gutter:stable}
 }
 @media(max-width:360px){
   .cv2-head{--countdown-size:80px}
-  .cv2-countdown-wrap{padding:6px}
+  .cv2-countdown-wrap{padding:3px 6px}
   .cv2-countdown{font-size:42px}
 }
 /* Shared spacing for desktop, tablets and long user-entered labels. */
@@ -2051,7 +2051,7 @@ html{scrollbar-gutter:stable}
  </form>
 </dialog>
 <dialog class="study-dialog" id="studyDeleteDialog" aria-labelledby="studyDeleteTitle">
- <div class="study-dialog-head"><h2 id="studyDeleteTitle">حذف المقرر؟</h2><button type="button" class="study-close" data-study-close aria-label="إغلاق">×</button></div><p id="studyDeleteName"></p><p class="study-note">سيُحذف المقرر وجميع مواعيده المرتبطة به من «مواعيد المقرر» و«المواعيد القادمة» على هذا الجهاز.</p><p class="study-feedback" id="studyDeleteFeedback"></p><div class="study-dialog-actions"><button class="study-danger" type="button" id="studyConfirmDelete">حذف المقرر ومواعيده</button><button class="study-secondary" type="button" data-study-close>تراجع</button></div>
+ <div class="study-dialog-head"><h2 id="studyDeleteTitle">حذف المقرر؟</h2><button type="button" class="study-close" data-study-close aria-label="إغلاق">×</button></div><p id="studyDeleteName"></p><p class="study-note">سُيحذف المقرر وجميع مواعيده المرتبطة به.</p><p class="study-feedback" id="studyDeleteFeedback"></p><div class="study-dialog-actions"><button class="study-danger" type="button" id="studyConfirmDelete">حذف المقرر ومواعيده</button><button class="study-secondary" type="button" data-study-close>تراجع</button></div>
 </dialog>
 
         <div class="view" id="view-upcoming">
