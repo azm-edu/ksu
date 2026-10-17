@@ -1020,7 +1020,11 @@ body.dark .code-import-corner-btn:hover{background:#1d304c}
   #view-gpa .gpa-heading-actions .gpa-reset-btn{height:42px;min-height:42px;line-height:1.6;white-space:nowrap}
   .gpa-mode-toggle{display:inline-flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px;height:42px;padding:0;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text-dim)}
   .gpa-mode-toggle svg{display:block;width:21px;height:21px;flex:none}
-  .gpa-mode-toggle:hover,.gpa-mode-toggle[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--navy)}
+  .gpa-mode-toggle[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--navy)}
+  /* Touch browsers can keep :hover after a tap; selection follows aria-pressed. */
+  @media (hover:hover) and (pointer:fine){
+    .gpa-mode-toggle:hover{border-color:var(--gold);background:var(--gold-soft);color:var(--navy)}
+  }
   .gpa-mode-toggle:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
   .gpa-summary{
     display:grid;
@@ -4427,10 +4431,15 @@ window.AzmCatalog = (() => {
     }
     throw new Error('CATALOG_RESULT_TOO_LARGE'); // Never present a truncated catalogue as complete.
   }
+  // Hide this major from new selections only; keep database rows and saved courses.
+  function selectableMajor(major){
+    const name=String(major.name_ar||'').normalize('NFKC').replace(/[\u0640\u064B-\u065F\u0670]/g,'').replace(/[أإآٱ]/g,'ا').trim();
+    return !/^(?:ال)?الكترونيات$/.test(name);
+  }
   return Object.freeze({
     colleges:()=>read('azm_colleges',{select:'id,name_ar',order:'name_ar.asc,id.asc'}),
     terms:()=>read('azm_terms',{select:'id,name_ar',is_current:'eq.true',order:'id.asc'}),
-    majors:college=>read('azm_majors',{select:'id,name_ar',college_id:'eq.'+college,order:'name_ar.asc,id.asc'}),
+    majors:async college=>(await read('azm_majors',{select:'id,name_ar',college_id:'eq.'+college,order:'name_ar.asc,id.asc'})).filter(selectableMajor),
     courses:(major,term)=>read('azm_major_offerings',{
       select:'offering:azm_offerings!inner(id,term_id,course:azm_courses(id,code,name_ar,credit_hours))',
       major_id:'eq.'+major,'offering.term_id':'eq.'+term,order:'offering_id.asc'
